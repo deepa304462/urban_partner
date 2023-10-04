@@ -1,20 +1,17 @@
-
 import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
+import 'package:urban_partner/core/utils/utils.dart';
+import 'package:urban_partner/presentation/home_screen/home_screen.dart';
 import 'package:urban_partner/presentation/onboarding_screen/onboarding_screen.dart';
-class SplashScreen extends StatelessWidget {
+
+class SplashScreen extends StatefulWidget {
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 3), () {
-      // Navigating to the next screen after a delay of 3 seconds
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) =>
-            OnBoardingPage()
-        ),
-      );
-    });
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorConstant.whiteA700,
@@ -29,7 +26,6 @@ class SplashScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-
               Spacer(),
               Card(
                 clipBehavior: Clip.antiAlias,
@@ -110,15 +106,40 @@ class SplashScreen extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfUserIsLoggedIn();
+  }
+
+  Future<void> _checkIfUserIsLoggedIn() async {
+    final isLoggedIn =
+        await Utils.getFromSharedPreference(Constants.isLoggedIn);
+    if (isLoggedIn != null) {
+      if (isLoggedIn) {
+        Future.delayed(Duration(seconds: 3), () {
+          // Navigating to the next screen after a delay of 3 seconds
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        });
+      } else {
+        redirectToOnboarding();
+      }
+    } else {
+      redirectToOnboarding();
+    }
+  }
+
+  void redirectToOnboarding() {
+    Future.delayed(Duration(seconds: 3), () {
+      // Navigating to the next screen after a delay of 3 seconds
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => OnBoardingPage()),
+      );
+    });
+  }
 }
-
-
-
-
-
-
-
-
-
-
-

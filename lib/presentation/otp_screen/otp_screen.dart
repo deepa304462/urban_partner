@@ -2,36 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:urban_partner/core/app_export.dart';
+import 'package:urban_partner/models/otp_model.dart';
+import 'package:urban_partner/presentation/home_screen/home_screen.dart';
 import 'package:urban_partner/presentation/select_city_screen/select_city_screen.dart';
+import 'package:urban_partner/repository/auth_repository.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
-import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../core/utils/utils.dart';
 
 class OtpScreen extends StatelessWidget {
-  void onTapVerify(BuildContext context) async {
-    Map<Permission, PermissionStatus> status = await [
-      Permission.locationWhenInUse,
-      Permission.locationAlways,
-    ].request();
-
-    if (status[Permission.locationWhenInUse]!.isGranted ||
-        status[Permission.locationAlways]!.isGranted) {
-      // Location permission granted, navigate to the next page
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => SelectCityScreen()),
-      );
-    } else {
-      // Location permission denied
-      Fluttertoast.showToast(msg: "Location permission denied!");
-    }
-  }
-
+  final pinCodeController = TextEditingController();
+  String phone = '';
+  String otpId = '';
+  late bool _isFromLogin;
 
   @override
   Widget build(BuildContext context) {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    otpId = arguments['otpId'];
+    phone = arguments['phone'];
+    _isFromLogin = arguments['isFromLogin'];
     return SafeArea(
         child: Scaffold(
             backgroundColor: ColorConstant.whiteA700,
@@ -55,10 +47,10 @@ class OtpScreen extends StatelessWidget {
                           child: Text("Verify your\nnumber",
                               maxLines: null,
                               textAlign: TextAlign.left,
-                              style: AppStyle.txtMulishRomanBlack4512Black900.copyWith(
-                                fontSize: 47,
-                                fontWeight: FontWeight.w900
-                              )),
+                              style: AppStyle.txtMulishRomanBlack4512Black900
+                                  .copyWith(
+                                      fontSize: 47,
+                                      fontWeight: FontWeight.w900)),
                         ),
                       ),
                       Container(
@@ -78,7 +70,7 @@ class OtpScreen extends StatelessWidget {
                                         fontStyle: FontStyle.italic,
                                         fontWeight: FontWeight.w400)),
                                 TextSpan(
-                                    text: " +9695956958 ",
+                                    text: phone,
                                     style: TextStyle(
                                         color: ColorConstant.blue900,
                                         fontSize: getFontSize(15),
@@ -113,6 +105,7 @@ class OtpScreen extends StatelessWidget {
                                 PinCodeTextField(
                                     appContext: context,
                                     length: 4,
+                                    controller: pinCodeController,
                                     obscureText: false,
                                     obscuringCharacter: '*',
                                     keyboardType: TextInputType.number,
@@ -148,40 +141,35 @@ class OtpScreen extends StatelessWidget {
                         padding: ButtonPadding.PaddingAll15,
                         fontStyle: ButtonFontStyle.MulishItalicExtraBlack24,
                         onTap: () {
-                          // onTapVerify(context);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> SelectCityScreen()));
+                          onTapVerify(context);
                         },
                       ),
-
                       Padding(
                           padding: getPadding(top: 17),
                           child: Text("Trouble receiving code ?",
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.left,
                               style: AppStyle.txtMulishItalicMedium14.copyWith(
-                                fontFamily: 'mulish',
-                                fontStyle: FontStyle.italic,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500
-
-                              ))),
+                                  fontFamily: 'mulish',
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500))),
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
                           padding: getPadding(left: 82, top: 15),
                           child: Row(
                             children: [
-                              Text(
-                                "60 sec",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                style: AppStyle.txtMulishItalicExtraBlack16.copyWith(
-                                  fontFamily: 'Mulish',
-                                  fontStyle: FontStyle.italic,
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 16,
-                                )
-                              ),
+                              Text("60 sec",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtMulishItalicExtraBlack16
+                                      .copyWith(
+                                    fontFamily: 'Mulish',
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.w900,
+                                    fontSize: 16,
+                                  )),
                               Padding(
                                 padding: getPadding(left: 15),
                                 child: Text(
@@ -217,14 +205,28 @@ class OtpScreen extends StatelessWidget {
                         child: Text("privacy policy",
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.left,
-                            style: AppStyle.txtMulishItalicBold14
-                                .copyWith(
-                               )),
+                            style: AppStyle.txtMulishItalicBold14.copyWith()),
                       )
                     ]))));
   }
-  //
-  // onTapVerify(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.selectCityScreen);
-  // }
+
+  void onTapVerify(BuildContext context) async {
+    final authRepository = AuthRepository();
+    final response = await authRepository
+        .verifyOtpApi(otpId, {'otp': pinCodeController.text});
+    OtpModel otpModel = OtpModel.fromJson(response);
+
+    if (otpModel.status == 200) {
+      await Utils.saveToSharedPreference(Constants.isLoggedIn, true);
+      debugPrint(otpModel.data!.otp.toString());
+      if (_isFromLogin) {
+        Utils.pushToNewRoute(context, HomeScreen());
+      } else {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => SelectCityScreen()));
+      }
+    } else {
+      Utils.toastMassage(response['message']);
+    }
+  }
 }

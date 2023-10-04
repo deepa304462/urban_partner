@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:urban_partner/core/app_export.dart';
+import 'package:urban_partner/models/all_city_model.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
-class SelectCityScreen extends StatelessWidget {
+
+import '../../repository/auth_repository.dart';
+
+class SelectCityScreen extends StatefulWidget {
+  @override
+  State<SelectCityScreen> createState() => _SelectCityScreenState();
+}
+
+class _SelectCityScreenState extends State<SelectCityScreen> {
+  late List<AllCityModel> cityList;
+  AllCityModel? selectedCity;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -29,8 +43,7 @@ class SelectCityScreen extends StatelessWidget {
                         style: AppStyle.txtInterBlack32.copyWith(
                             fontSize: 32,
                             fontWeight: FontWeight.w900,
-                            fontStyle: FontStyle.italic
-                        )))),
+                            fontStyle: FontStyle.italic)))),
             body: Container(
                 width: size.width,
                 height: size.height,
@@ -232,16 +245,45 @@ class SelectCityScreen extends StatelessWidget {
                                             style:
                                                 AppStyle.txtMulishRomanBlack15))
                                   ])),
-                          CustomButton(
-                              height: getVerticalSize(58),
-                              width: getHorizontalSize(267),
-                              text: "Select City",
-                              margin: getMargin(top: 24),
-                              variant: ButtonVariant.FillWhiteA700,
-                              shape: ButtonShape.RoundedBorder29,
-                              padding: ButtonPadding.PaddingT16,
-                              fontStyle: ButtonFontStyle.InterBlack20,
-                              suffixWidget: Icon(Icons.keyboard_arrow_down,  color: ColorConstant.blue900, size: 25,),),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30)
+                              ),
+                              height: 50,
+                              width: 200,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8,bottom: 8,left: 20,right: 20),
+                                child: DropdownButtonFormField<AllCityModel>(
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    contentPadding: const EdgeInsets.all(8),
+                                    suffixIcon:  Icon(Icons.keyboard_arrow_down,color: Colors.blue.shade900,size: 30,),
+                                    hintText: 'Please Pick a type',
+                                  ),
+                                  value: selectedCity,style: TextStyle(color: Colors.blue.shade900,fontWeight: FontWeight.bold,fontSize: 20),
+                                  iconSize: 0,
+                                  elevation: 16,
+                                  onChanged: (AllCityModel? newValue) {
+                                    setState(() {
+                                      selectedCity = newValue;
+                                    });
+                                  },
+                                  items: cityList
+                                      .map<DropdownMenuItem<AllCityModel>>((AllCityModel value) {
+                                    return DropdownMenuItem<AllCityModel>(
+                                      value: value,
+                                      child: Text(value.selectcity ?? ''),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
                           Container(
                               width: getHorizontalSize(260),
                               margin: getMargin(top: 60),
@@ -361,5 +403,42 @@ class SelectCityScreen extends StatelessWidget {
 
   onTapImgEllipse154(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.pincoeScreen);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    requestLocationPermission();
+    allCity();
+  }
+
+  Future<void> requestLocationPermission() async {
+    Map<Permission, PermissionStatus> status = await [
+      Permission.locationWhenInUse,
+      Permission.locationAlways,
+    ].request();
+
+    if (status[Permission.locationWhenInUse]!.isGranted ||
+        status[Permission.locationAlways]!.isGranted) {
+      // Location permission granted, navigate to the next page
+    } else {
+      // Location permission denied
+      Fluttertoast.showToast(msg: "Location permission denied!");
+    }
+  }
+
+
+  void allCity() async {
+    final authRepository = AuthRepository();
+    List<dynamic> jsonList = await authRepository.allCityApi();
+
+    setState(() {
+      cityList = jsonList.map((jsonItem) {
+        return AllCityModel.fromJson(jsonItem);
+      }).toList();
+    });
+
+    print(cityList.length);
   }
 }

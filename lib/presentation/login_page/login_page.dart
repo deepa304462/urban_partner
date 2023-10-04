@@ -1,26 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/core/utils/utils.dart';
+import 'package:urban_partner/models/login_model.dart';
 import 'package:urban_partner/models/register_model.dart';
-import 'package:urban_partner/presentation/login_page/login_page.dart';
 import 'package:urban_partner/repository/auth_repository.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
 import 'package:urban_partner/widgets/custom_text_form_field.dart';
 
+import '../../shared/ui_navigation.dart';
 import '../../view_models/auth_view_model.dart';
-// ignore_for_file: must_be_immutable
+import '../sign_up_page/sign_up.dart';
 
-// ignore_for_file: must_be_immutable
-
-// ignore_for_file: must_be_immutable
-class SignUpScreen extends StatelessWidget {
-  TextEditingController rectangle3405Controller = TextEditingController();
-
-  TextEditingController rectangle3407Controller = TextEditingController();
-
+class LogInScreen extends StatelessWidget {
   TextEditingController rectangle3408Controller = TextEditingController();
 
   @override
@@ -49,41 +42,17 @@ class SignUpScreen extends StatelessWidget {
                                         alignment: Alignment.topLeft,
                                         child: CustomImageView(
                                             svgPath:
-                                                ImageConstant.imgGroup295)),
+                                            ImageConstant.imgGroup295)),
                                     Align(
                                         alignment: Alignment.bottomRight,
                                         child: Container(
                                             width: getHorizontalSize(263),
-                                            child: Text("Create your Account",
+                                            child: Text("Login your Account",
                                                 maxLines: null,
                                                 textAlign: TextAlign.left,
                                                 style: AppStyle
                                                     .txtMulishRomanBlack4512)))
                                   ]))),
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                              padding: getPadding(left: 16, top: 34),
-                              child: Text("Full Name:",
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                  style: AppStyle.txtInterMedium14))),
-                      CustomTextFormField(
-                          focusNode: FocusNode(),
-                          controller: rectangle3405Controller,
-                          margin: getMargin(left: 16, top: 8, right: 16)),
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                              padding: getPadding(left: 16, top: 24),
-                              child: Text("Email ID:",
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                  style: AppStyle.txtInterMedium14))),
-                      CustomTextFormField(
-                          focusNode: FocusNode(),
-                          controller: rectangle3407Controller,
-                          margin: getMargin(left: 16, top: 8, right: 16)),
                       Align(
                           alignment: Alignment.centerLeft,
                           child: Padding(
@@ -111,24 +80,24 @@ class SignUpScreen extends StatelessWidget {
                           padding: getPadding(top: 47, bottom: 128),
                           child: InkWell(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (_)=>LogInScreen()));
+                              NavByMe.push(context,   SignUpScreen());
                             },
                             child: RichText(
                                 text: TextSpan(children: [
                                   TextSpan(
-                                      text: "Already have an account? ",
+                                      text: "If you don't have account ",
                                       style: TextStyle(
                                           color: ColorConstant.gray900,
                                           fontSize:
-                                              getFontSize(19.91122055053711),
+                                          getFontSize(19.91122055053711),
                                           fontFamily: 'Mulish',
                                           fontWeight: FontWeight.w700)),
                                   TextSpan(
-                                      text: "Log in",
+                                      text: "Sign Up",
                                       style: TextStyle(
                                           color: ColorConstant.blue900,
                                           fontSize:
-                                              getFontSize(19.91122055053711),
+                                          getFontSize(19.91122055053711),
                                           fontFamily: 'Mulish',
                                           fontWeight: FontWeight.w900))
                                 ]),
@@ -140,17 +109,15 @@ class SignUpScreen extends StatelessWidget {
   onTapSendotp(BuildContext context) async {
     Utils.showNonDismissibleLoadingDialog(context, 'Please wait...', 'Loading...');
     Map<String, String> data = {
-      'fullName': rectangle3405Controller.text,
       'phone': rectangle3408Controller.text,
-      'email': rectangle3407Controller.text
     };
     final authRepository = AuthRepository();
-    final response = await authRepository.signUpApi(data);
+    final response = await authRepository.logInApi(data);
     Navigator.pop(context);
-    RegisterModel registerModel = RegisterModel.fromJson(response);
-    if (registerModel.status == 200) {
-      debugPrint(registerModel.data!.otp.toString());
-      Navigator.pushNamed(context, AppRoutes.otpScreen, arguments: {'otpId': registerModel.data!.id!, 'isFromLogin': false,'phone':rectangle3408Controller.text});
+    LoginModel loginModel = LoginModel.fromJson(response);
+    if (loginModel.status == 200) {
+      debugPrint(loginModel.data!.otp.toString());
+      Navigator.pushNamed(context, AppRoutes.otpScreen, arguments: {'otpId': loginModel.data!.id!, 'isFromLogin': true,'phone':rectangle3408Controller.text});
     } else {
       Utils.toastMassage(response['msg']);
     }

@@ -1,3 +1,4 @@
+import 'package:urban_partner/core/utils/utils.dart';
 import 'package:urban_partner/presentation/edit_eorking_area_screen/edit_eorking_area_screen.dart';
 import 'package:urban_partner/presentation/my_plans_befor_activating_screen/my_plans_befor_activating_screen.dart';
 
@@ -713,7 +714,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   getPadding(top: 14, right: 52,),
                               child: GestureDetector(
                                 onTap: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
+                                  Utils.logOut(context);
                                 },
                                 child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,

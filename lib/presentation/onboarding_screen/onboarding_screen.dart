@@ -6,6 +6,7 @@ import 'package:urban_partner/core/utils/app_constant.dart';
 import 'package:urban_partner/core/utils/color_constant.dart';
 import 'package:urban_partner/core/utils/image_constant.dart';
 import 'package:urban_partner/core/utils/size_utils.dart';
+import 'package:urban_partner/presentation/login_page/login_page.dart';
 import 'package:urban_partner/presentation/sign_up_page/sign_up.dart';
 import 'package:urban_partner/shared/ui_constant.dart';
 import 'package:urban_partner/shared/ui_navigation.dart';
