@@ -45,4 +45,36 @@ class AuthRepository {
       throw e;
     }
   }
+
+
+  Future<dynamic> serviceAreaApi() async {
+    try {
+      dynamic response =
+      await _apiServices.getGetApiResponse(AppUrl.serviceArea);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<dynamic> serviceDistanceAreaApi() async {
+    try {
+      dynamic response =
+      await _apiServices.getGetApiResponse(AppUrl.serviceDistance);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<dynamic> allServiceApi() async {
+    try {
+      dynamic response =
+      await _apiServices.getGetApiResponse(AppUrl.allServices);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
 }

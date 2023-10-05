@@ -3,8 +3,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/models/all_city_model.dart';
+import 'package:urban_partner/presentation/pincoe_screen/pincoe_screen.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
-import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
 
 import '../../repository/auth_repository.dart';
@@ -15,7 +15,7 @@ class SelectCityScreen extends StatefulWidget {
 }
 
 class _SelectCityScreenState extends State<SelectCityScreen> {
-  late List<AllCityModel> cityList;
+  List<AllCityModel> cityList = [];
   AllCityModel? selectedCity;
 
   @override
@@ -258,12 +258,16 @@ class _SelectCityScreenState extends State<SelectCityScreen> {
                               width: 200,
                               child: Padding(
                                 padding: const EdgeInsets.only(top: 8,bottom: 8,left: 20,right: 20),
-                                child: DropdownButtonFormField<AllCityModel>(
+                                child: cityList == null ? Container(): DropdownButtonFormField<AllCityModel>(
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     contentPadding: const EdgeInsets.all(8),
                                     suffixIcon:  Icon(Icons.keyboard_arrow_down,color: Colors.blue.shade900,size: 30,),
-                                    hintText: 'Please Pick a type',
+                                    hintText: 'Select City',hintStyle: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.blue.shade900,
+                                    fontWeight: FontWeight.bold
+                                  ),
                                   ),
                                   value: selectedCity,style: TextStyle(color: Colors.blue.shade900,fontWeight: FontWeight.bold,fontSize: 20),
                                   iconSize: 0,
@@ -271,6 +275,7 @@ class _SelectCityScreenState extends State<SelectCityScreen> {
                                   onChanged: (AllCityModel? newValue) {
                                     setState(() {
                                       selectedCity = newValue;
+                                     Navigator.push(context, MaterialPageRoute(builder: (_)=>PincodeScreen()));
                                     });
                                   },
                                   items: cityList

@@ -288,7 +288,7 @@ class AppRoutes {
     frame37355Screen: (context) => Frame37355Screen(),
     workProfileTabContainerScreen: (context) => WorkProfileTabContainerScreen(),
     selectCityScreen: (context) => SelectCityScreen(),
-    pincoeScreen: (context) => PincoeScreen(),
+    pincoeScreen: (context) => PincodeScreen(),
     workProfileOneScreen: (context) => WorkProfileOneScreen(),
     otpScreen: (context) => OtpScreen(),
     frame9919Screen: (context) => Frame9919Screen(),

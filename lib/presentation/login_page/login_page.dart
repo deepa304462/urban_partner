@@ -117,6 +117,7 @@ class LogInScreen extends StatelessWidget {
     LoginModel loginModel = LoginModel.fromJson(response);
     if (loginModel.status == 200) {
       debugPrint(loginModel.data!.otp.toString());
+      Utils.toastMassage(loginModel.data!.otp.toString());
       Navigator.pushNamed(context, AppRoutes.otpScreen, arguments: {'otpId': loginModel.data!.id!, 'isFromLogin': true,'phone':rectangle3408Controller.text});
     } else {
       Utils.toastMassage(response['msg']);

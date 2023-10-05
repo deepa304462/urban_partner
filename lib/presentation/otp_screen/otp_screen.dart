@@ -11,11 +11,21 @@ import 'package:urban_partner/widgets/custom_icon_button.dart';
 
 import '../../core/utils/utils.dart';
 
-class OtpScreen extends StatelessWidget {
+class OtpScreen extends StatefulWidget {
+  @override
+  State<OtpScreen> createState() => _OtpScreenState();
+}
+
+class _OtpScreenState extends State<OtpScreen> {
   final pinCodeController = TextEditingController();
+
   String phone = '';
+
   String otpId = '';
+
   late bool _isFromLogin;
+
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +144,7 @@ class OtpScreen extends StatelessWidget {
                                         activeColor:
                                             ColorConstant.fromHex("#1212121D")))
                               ])),
-                      CustomButton(
+                   _isLoading?Center(child: CircularProgressIndicator()) :  CustomButton(
                         text: "Verify",
                         margin: getMargin(left: 27, top: 94, right: 28),
                         shape: ButtonShape.RoundedBorder29,
@@ -211,21 +221,33 @@ class OtpScreen extends StatelessWidget {
   }
 
   void onTapVerify(BuildContext context) async {
+    setState(() {
+      _isLoading= true;
+    });
     final authRepository = AuthRepository();
     final response = await authRepository
         .verifyOtpApi(otpId, {'otp': pinCodeController.text});
     OtpModel otpModel = OtpModel.fromJson(response);
-
     if (otpModel.status == 200) {
+      setState(() {
+        _isLoading= false;
+      });
       await Utils.saveToSharedPreference(Constants.isLoggedIn, true);
       debugPrint(otpModel.data!.otp.toString());
+      Utils.toastMassage(otpModel.data!.otp.toString());
       if (_isFromLogin) {
         Utils.pushToNewRoute(context, HomeScreen());
       } else {
+        setState(() {
+          _isLoading= false;
+        });
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => SelectCityScreen()));
       }
     } else {
+      setState(() {
+        _isLoading= false;
+      });
       Utils.toastMassage(response['message']);
     }
   }

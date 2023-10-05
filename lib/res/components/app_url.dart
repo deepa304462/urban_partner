@@ -8,4 +8,10 @@ class AppUrl {
   static var verifyOtp = baseUrl + 'api/v1/vendor';
 
   static var allCity = baseUrl+ 'api/v1/city';
+
+  static var serviceArea = baseUrl +'api/v1/serviceArea';
+
+  static var serviceDistance = baseUrl+'api/v1/serviceableDist';
+
+  static var allServices = baseUrl +"api/v1/service";
 }
