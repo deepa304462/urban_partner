@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/models/all_city_model.dart';
+import 'package:urban_partner/models/login_model.dart';
 import 'package:urban_partner/presentation/pincoe_screen/pincoe_screen.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
@@ -10,6 +11,7 @@ import 'package:urban_partner/widgets/custom_icon_button.dart';
 import '../../repository/auth_repository.dart';
 
 class SelectCityScreen extends StatefulWidget {
+
   @override
   State<SelectCityScreen> createState() => _SelectCityScreenState();
 }
@@ -275,7 +277,7 @@ class _SelectCityScreenState extends State<SelectCityScreen> {
                                   onChanged: (AllCityModel? newValue) {
                                     setState(() {
                                       selectedCity = newValue;
-                                     Navigator.push(context, MaterialPageRoute(builder: (_)=>PincodeScreen()));
+                                     Navigator.push(context, MaterialPageRoute(builder: (_)=>PincodeScreen('')));
                                     });
                                   },
                                   items: cityList

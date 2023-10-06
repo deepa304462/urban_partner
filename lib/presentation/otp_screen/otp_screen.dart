@@ -233,7 +233,10 @@ class _OtpScreenState extends State<OtpScreen> {
         _isLoading= false;
       });
       await Utils.saveToSharedPreference(Constants.isLoggedIn, true);
+      await Utils.saveToSharedPreference(Constants.userId, otpId);
+      await Utils.saveToSharedPreference(Constants.accessToken, otpModel.data?.accessToken);
       debugPrint(otpModel.data!.otp.toString());
+      debugPrint(otpModel.data?.accessToken);
       Utils.toastMassage(otpModel.data!.otp.toString());
       if (_isFromLogin) {
         Utils.pushToNewRoute(context, HomeScreen());

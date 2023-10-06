@@ -8,6 +8,8 @@ import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
 
 class PincodeScreen extends StatefulWidget {
+  PincodeScreen(String? id);
+
 
   @override
   State<PincodeScreen> createState() => _PincodeScreenState();

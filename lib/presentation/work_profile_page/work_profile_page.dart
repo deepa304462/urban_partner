@@ -1,34 +1,37 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:urban_partner/core/app_export.dart';
-import 'package:urban_partner/presentation/aster_image_page/aster_image_page.dart';
+import 'package:urban_partner/models/update_and_upload_model.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_text_form_field.dart';
 
+import '../../repository/auth_repository.dart';
 import '../../widgets/custom_icon_button.dart';
-import '../home_screen/dashboard_view.dart';
 
 class WorkProfilePage extends StatefulWidget {
   @override
   _WorkProfilePageState createState() => _WorkProfilePageState();
-  // onTapImgMaterialsymbols(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
-  // }
-  //
-  // onTapImgMaterialsymbols1(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
-  // }
-  //
-  // onTapImgMaterialsymbols2(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
-  // }
-  //
-  // onTapImgMaterialsymbols3(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
-  // }
-  //
-  // onTapGridicons(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.frame37355Screen);
-  // }
+// onTapImgMaterialsymbols(BuildContext context) {
+//   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
+// }
+//
+// onTapImgMaterialsymbols1(BuildContext context) {
+//   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
+// }
+//
+// onTapImgMaterialsymbols2(BuildContext context) {
+//   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
+// }
+//
+// onTapImgMaterialsymbols3(BuildContext context) {
+//   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
+// }
+//
+// onTapGridicons(BuildContext context) {
+//   Navigator.pushNamed(context, AppRoutes.frame37355Screen);
+// }
 }
 
 // ignore_for_file: must_be_immutable
@@ -37,360 +40,422 @@ class WorkProfilePage extends StatefulWidget {
 class _WorkProfilePageState extends State<WorkProfilePage>
     with AutomaticKeepAliveClientMixin<WorkProfilePage> {
   TextEditingController rectangle3405Controller = TextEditingController();
-
   TextEditingController rectangle3411Controller = TextEditingController();
+  File? pic;
+  File? panCard;
+  File? adharFront;
+  File? adharBack;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-            backgroundColor: Colors.transparent,
-            resizeToAvoidBottomInset: false,
-            body: SizedBox(
-                width: size.width,
-                child: SingleChildScrollView(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false,
+        body: SizedBox(
+            width: size.width,
+            child: SingleChildScrollView(
+                child: Form(
+              key: _formKey,
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Padding(
+                    padding: getPadding(left: 16, top: 18, right: 16),
                     child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                      Padding(
-                          padding: getPadding(left: 16, top: 18, right: 16),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                    padding: getPadding(right: 98),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                              padding: getPadding(
-                                                  left: 6,
-                                                  top: 30,
-                                                  right: 6,
-                                                  bottom: 24),
-                                              decoration: AppDecoration
-                                                  .outlineBluegray100
-                                                  .copyWith(
-                                                      borderRadius:
-                                                          BorderRadiusStyle
-                                                              .circleBorder82),
-                                              child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                        width:
-                                                            getHorizontalSize(
-                                                                82),
-                                                        margin:
-                                                            getMargin(top: 2),
-                                                        child: Text(
-                                                            "Upload your Selfie",
-                                                            maxLines: null,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: AppStyle
-                                                                .txtInterRegular16Black90087))
-                                                  ])),
-                                          CustomImageView(
-                                              svgPath: ImageConstant
-                                                  .imgMaterialsymbolscloudupload,
-                                              height: getSize(24),
-                                              width: getSize(24),
-                                              margin: getMargin(
-                                                  top: 31, bottom: 38),
-                                              onTap: () {
-                                                // onTapImgMaterialsymbols(
-                                                //     context);
-                                                btm();
-                                              }
-                                              )
-                                        ])),
-                                Padding(
-                                    padding: getPadding(top: 25),
-                                    child: Text("PAN Card",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: AppStyle.txtInterMedium14.copyWith(
-                                          fontFamily: 'Inter',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400,
-                                        ))),
-                                CustomTextFormField(
-                                    focusNode: FocusNode(),
-                                    controller: rectangle3405Controller,
-                                    margin: getMargin(top: 8)),
-                                Padding(
-                                    padding: getPadding(top: 11, right: 98),
-                                    child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                              padding: getPadding(
-                                                  left: 4,
-                                                  top: 24,
-                                                  right: 4,
-                                                  bottom: 24),
-                                              decoration: AppDecoration
-                                                  .outlineBluegray100
-                                                  .copyWith(
-                                                      borderRadius:
-                                                          BorderRadiusStyle
-                                                              .roundedBorder8),
-                                              child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                        width:
-                                                            getHorizontalSize(
-                                                                125),
-                                                        margin: getMargin(
-                                                            bottom: 2),
-                                                        child: Text(
-                                                            "Upload pan card\nimage Here",
-                                                            maxLines: null,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: AppStyle
-                                                                .txtInterRegular16Black90087))
-                                                  ])),
-                                          CustomImageView(
-                                              svgPath: ImageConstant
-                                                  .imgMaterialsymbolscloudupload,
-                                              height: getSize(24),
-                                              width: getSize(24),
-                                              margin: getMargin(
-                                                  left: 101,
-                                                  top: 28,
-                                                  bottom: 41),
-                                              onTap: () {
-                                                // onTapImgMaterialsymbols1(
-                                                //     context);
-                                                btm();
-                                              })
-                                        ])),
-                                Padding(
-                                    padding: getPadding(top: 19),
-                                    child: Text("Aadhar  Card",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: AppStyle.txtInterMedium14.copyWith(
-                                          fontFamily: 'Inter',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400,
-                                        ))),
-                                CustomTextFormField(
-                                    focusNode: FocusNode(),
-                                    controller: rectangle3411Controller,
-                                    margin: getMargin(top: 8),
-                                    textInputAction: TextInputAction.done),
-                                Padding(
-                                    padding: getPadding(top: 19),
-                                    child: Text("Front Side",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style:
-                                            AppStyle.txtInterMedium13Black900.copyWith(
-                                              fontFamily: 'Inter',
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w500,
-                                            ))),
-                                Padding(
-                                    padding: getPadding(top: 8, right: 98),
-                                    child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                              padding: getPadding(
-                                                  left: 3,
-                                                  top: 24,
-                                                  right: 3,
-                                                  bottom: 24),
-                                              decoration: AppDecoration
-                                                  .outlineBluegray100
-                                                  .copyWith(
-                                                      borderRadius:
-                                                          BorderRadiusStyle
-                                                              .roundedBorder8),
-                                              child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                        width:
-                                                            getHorizontalSize(
-                                                                164),
-                                                        margin: getMargin(
-                                                            bottom: 2),
-                                                        child: Text(
-                                                            "Upload Aadhar Card\nfront side Image Here",
-                                                            maxLines: null,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: AppStyle
-                                                                .txtInterRegular16Black90087))
-                                                  ])),
-                                          CustomImageView(
-                                              svgPath: ImageConstant
-                                                  .imgMaterialsymbolscloudupload,
-                                              height: getSize(24),
-                                              width: getSize(24),
-                                              margin: getMargin(
-                                                  left: 65,
-                                                  top: 28,
-                                                  bottom: 41),
-                                              onTap: () {
-                                                btm();
-                                              })
-                                        ])),
-                                Padding(
-                                    padding: getPadding(top: 8),
-                                    child: Text("Back Side",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style:
-                                            AppStyle.txtInterMedium13Black900.copyWith(
-                                              fontFamily: 'Inter',
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w500,
-                                            ))),
-                                Padding(
-                                    padding: getPadding(top: 8, right: 98),
-                                    child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                              padding: getPadding(
-                                                  left: 3,
-                                                  top: 23,
-                                                  right: 3,
-                                                  bottom: 23),
-                                              decoration: AppDecoration
-                                                  .outlineBluegray100
-                                                  .copyWith(
-                                                      borderRadius:
-                                                          BorderRadiusStyle
-                                                              .roundedBorder8),
-                                              child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                        width:
-                                                            getHorizontalSize(
-                                                                164),
-                                                        margin:
-                                                            getMargin(top: 3),
-                                                        child: Text(
-                                                            "Upload Aadhar Card\nback side Image Here",
-                                                            maxLines: null,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: AppStyle
-                                                                .txtInterRegular16Black90087))
-                                                  ])),
-                                          CustomImageView(
-                                              svgPath: ImageConstant
-                                                  .imgMaterialsymbolscloudupload,
-                                              height: getSize(24),
-                                              width: getSize(24),
-                                              margin: getMargin(
-                                                  left: 65,
-                                                  top: 31,
-                                                  bottom: 38),
-                                              onTap: () {
-                                                // onTapImgMaterialsymbols3(
-                                                //     context);
-                                                btm();
-                                              }
-                                              )
-                                        ])),
-                                Padding(
-                                    padding: getPadding(top: 28),
-                                    child: Text("Select other document",
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.left,
-                                        style: AppStyle.txtInterMedium14.copyWith(
-                                          fontFamily: 'Inter',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400,
-                                        ))),
-                                Container(
-                                    width: double.maxFinite,
-                                    child: GestureDetector(
+                          Padding(
+                              padding: getPadding(right: 98),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.grey.shade400),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          radius: 50,
+                                          child: pic == null
+                                              ? Text(
+                                                  '  Upload \nyour selfie',
+                                                  style: TextStyle(
+                                                      color:
+                                                          Colors.grey.shade400),
+                                                )
+                                              : Image.file(pic!,
+                                                  fit: BoxFit.contain),
+                                        ),
+                                      ),
+                                    ),
+                                    CustomImageView(
+                                        svgPath: ImageConstant
+                                            .imgMaterialsymbolscloudupload,
+                                        height: getSize(24),
+                                        width: getSize(24),
+                                        margin: getMargin(top: 31, bottom: 38),
                                         onTap: () {
-                                          // onTapGridicons(context);
-
-                                        },
-                                        child: Container(
-                                            width: getHorizontalSize(358),
-                                            margin: getMargin(top: 8),
-                                            padding: getPadding(
-                                                left: 13,
-                                                top: 17,
-                                                right: 13,
-                                                bottom: 17),
-                                            decoration: AppDecoration
-                                                .outlineBluegray100
-                                                .copyWith(
-                                                    borderRadius:
-                                                        BorderRadiusStyle
-                                                            .roundedBorder8),
-                                            child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  CustomImageView(
-                                                      svgPath: ImageConstant
-                                                          .imgVectorBlack9005x10,
-                                                      height:
-                                                          getVerticalSize(5),
-                                                      width:
-                                                          getHorizontalSize(10),
-                                                      margin: getMargin(top: 1))
-                                                ])))),
-                                CustomButton(
-                                  onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
+                                          btm(() async {
+                                            pic = await _getImageByCamera();
+                                            if (pic != null) {
+                                              setState(() {
+                                                print(pic!.path);
+                                              });
+                                            }
+                                            //camera open here
+                                          }, () async {
+                                            pic = await _getImageByGallery();
+                                            if (pic != null) {
+                                              setState(() {
+                                                print(pic!.path);
+                                              });
+                                            }
+                                            //gallery open here
+                                          });
+                                        })
+                                  ])),
+                          Padding(
+                              padding: getPadding(top: 25),
+                              child: Text("PAN Card",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtInterMedium14.copyWith(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ))),
+                          CustomTextFormField(
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Please enter PAN number';
+                                }
+                              },
+                              focusNode: FocusNode(),
+                              controller: rectangle3405Controller,
+                              margin: getMargin(top: 8)),
+                          Padding(
+                              padding: getPadding(top: 11, right: 98),
+                              child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.grey.shade400),
+                                          borderRadius:
+                                              BorderRadius.circular(16)),
+                                      width: getHorizontalSize(130),
+                                      height: 80,
+                                      margin: getMargin(
+                                        bottom: 2,
+                                      ),
+                                      child: panCard == null
+                                          ? Center(
+                                              child: Text(
+                                                  "Upload pan card\nimage Here",
+                                                  maxLines: null,
+                                                  textAlign: TextAlign.left,
+                                                  style: AppStyle
+                                                      .txtInterRegular16Black90087),
+                                            )
+                                          : Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 30, right: 30),
+                                              child: Transform(
+                                                transform: Matrix4.rotationZ(
+                                                    -90 * 3.1415926535 / 180),
+                                                alignment: Alignment.center,
+                                                child: Image.file(
+                                                  panCard!,
+                                                ),
+                                              ),
+                                            ),
+                                    ),
+                                    CustomImageView(
+                                        svgPath: ImageConstant
+                                            .imgMaterialsymbolscloudupload,
+                                        height: getSize(24),
+                                        width: getSize(24),
+                                        margin: getMargin(
+                                            left: 108, top: 28, bottom: 41),
+                                        onTap: () {
+                                          btm(() async {
+                                            panCard = await _getImageByCamera();
+                                            if (panCard != null) {
+                                              setState(() {
+                                                print(panCard!.path);
+                                              });
+                                            }
+                                            //camera open here
+                                          }, () async {
+                                            panCard =
+                                                await _getImageByGallery();
+                                            if (panCard != null) {
+                                              setState(() {
+                                                print(panCard!.path);
+                                              });
+                                            }
+                                            //gallery open here
+                                          });
+                                        })
+                                  ])),
+                          Padding(
+                              padding: getPadding(top: 19),
+                              child: Text("Aadhar  Card",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtInterMedium14.copyWith(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ))),
+                          CustomTextFormField(
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Please enter Adhar Number';
+                                }
+                              },
+                              focusNode: FocusNode(),
+                              controller: rectangle3411Controller,
+                              margin: getMargin(top: 8),
+                              textInputAction: TextInputAction.done),
+                          Padding(
+                              padding: getPadding(top: 19),
+                              child: Text("Front Side",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtInterMedium13Black900
+                                      .copyWith(
+                                    fontFamily: 'Inter',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                  ))),
+                          Padding(
+                              padding: getPadding(top: 8, right: 98),
+                              child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.grey.shade400),
+                                          borderRadius:
+                                              BorderRadius.circular(16)),
+                                      width: getHorizontalSize(130),
+                                      height: 80,
+                                      margin: getMargin(
+                                        bottom: 2,
+                                      ),
+                                      child: adharFront == null
+                                          ? Center(
+                                              child: Text(
+                                                  "Upload Adhar card\nfront side image Here",
+                                                  maxLines: null,
+                                                  textAlign: TextAlign.left,
+                                                  style: AppStyle
+                                                      .txtInterRegular16Black90087),
+                                            )
+                                          : Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 30, right: 30),
+                                              child: Transform(
+                                                transform: Matrix4.rotationZ(
+                                                    -90 * 3.1415926535 / 180),
+                                                alignment: Alignment.center,
+                                                child: Image.file(
+                                                  adharFront!,
+                                                ),
+                                              ),
+                                            ),
+                                    ),
+                                    CustomImageView(
+                                        svgPath: ImageConstant
+                                            .imgMaterialsymbolscloudupload,
+                                        height: getSize(24),
+                                        width: getSize(24),
+                                        margin: getMargin(
+                                            left: 108, top: 28, bottom: 41),
+                                        onTap: () {
+                                          btm(() async {
+                                            adharFront =
+                                                await _getImageByCamera();
+                                            if (adharFront != null) {
+                                              setState(() {
+                                                print(adharFront!.path);
+                                              });
+                                            }
+                                            //camera open here
+                                          }, () async {
+                                            adharFront =
+                                                await _getImageByGallery();
+                                            if (adharFront != null) {
+                                              setState(() {
+                                                print(adharFront!.path);
+                                              });
+                                            }
+                                            //gallery open here
+                                          });
+                                        })
+                                  ])),
+                          Padding(
+                              padding: getPadding(top: 8),
+                              child: Text("Back Side",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtInterMedium13Black900
+                                      .copyWith(
+                                    fontFamily: 'Inter',
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                  ))),
+                          Padding(
+                              padding: getPadding(top: 8, right: 98),
+                              child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.grey.shade400),
+                                          borderRadius:
+                                              BorderRadius.circular(16)),
+                                      width: getHorizontalSize(130),
+                                      height: 80,
+                                      margin: getMargin(
+                                        bottom: 2,
+                                      ),
+                                      child: adharBack == null
+                                          ? Center(
+                                              child: Text(
+                                                  "Upload Adhar card\nback side image Here",
+                                                  maxLines: null,
+                                                  textAlign: TextAlign.left,
+                                                  style: AppStyle
+                                                      .txtInterRegular16Black90087),
+                                            )
+                                          : Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 30, right: 30),
+                                              child: Transform(
+                                                transform: Matrix4.rotationZ(
+                                                    -90 * 3.1415926535 / 180),
+                                                alignment: Alignment.center,
+                                                child: Image.file(
+                                                  adharBack!,
+                                                ),
+                                              ),
+                                            ),
+                                    ),
+                                    CustomImageView(
+                                        svgPath: ImageConstant
+                                            .imgMaterialsymbolscloudupload,
+                                        height: getSize(24),
+                                        width: getSize(24),
+                                        margin: getMargin(
+                                            left: 108, top: 31, bottom: 38),
+                                        onTap: () {
+                                          btm(() async {
+                                            adharBack =
+                                                await _getImageByCamera();
+                                            if (adharBack != null) {
+                                              setState(() {
+                                                print(adharBack!.path);
+                                              });
+                                            }
+                                            //camera open here
+                                          }, () async {
+                                            adharBack =
+                                                await _getImageByGallery();
+                                            if (adharBack != null) {
+                                              setState(() {
+                                                print(adharBack!.path);
+                                              });
+                                            }
+                                            //gallery open here
+                                          });
+                                        })
+                                  ])),
+                          Padding(
+                              padding: getPadding(top: 28),
+                              child: Text("Select other document",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: AppStyle.txtInterMedium14.copyWith(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                  ))),
+                          Container(
+                              width: double.maxFinite,
+                              child: GestureDetector(
+                                  onTap: () {
+                                    // onTapGridicons(context);
                                   },
-                                    width: getHorizontalSize(195),
-                                    text: "Save",
-                                    margin: getMargin(top: 100),
-                                    shape: ButtonShape.RoundedBorder26,
-                                    padding: ButtonPadding.PaddingAll11,
-                                    fontStyle: ButtonFontStyle.InterSemiBold24,
-                                    alignment: Alignment.center)
-                              ]))
-                    ]))),
-
-        ),
-
+                                  child: Container(
+                                      width: getHorizontalSize(358),
+                                      margin: getMargin(top: 8),
+                                      padding: getPadding(
+                                          left: 13,
+                                          top: 17,
+                                          right: 13,
+                                          bottom: 17),
+                                      decoration: AppDecoration
+                                          .outlineBluegray100
+                                          .copyWith(
+                                              borderRadius: BorderRadiusStyle
+                                                  .roundedBorder8),
+                                      child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            CustomImageView(
+                                                svgPath: ImageConstant
+                                                    .imgVectorBlack9005x10,
+                                                height: getVerticalSize(5),
+                                                width: getHorizontalSize(10),
+                                                margin: getMargin(top: 1))
+                                          ])))),
+                          CustomButton(
+                              onTap: () {
+                                if (_formKey.currentState!.validate()) {
+                                  uploadAndUpdateDocument();
+                                }
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => Dashboard()));
+                              },
+                              width: getHorizontalSize(195),
+                              text: "Save",
+                              margin: getMargin(top: 100),
+                              shape: ButtonShape.RoundedBorder26,
+                              padding: ButtonPadding.PaddingAll11,
+                              fontStyle: ButtonFontStyle.InterSemiBold24,
+                              alignment: Alignment.center)
+                        ]))
+              ]),
+            ))),
+      ),
     );
   }
-  Future<void> btm() {
+
+  Future<void> btm(cameraSelect, gallerySelected) {
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
@@ -404,7 +469,7 @@ class _WorkProfilePageState extends State<WorkProfilePage>
             bottom: 26,
           ),
           decoration: BoxDecoration(
-            color: Color(0xFF094DB3),// Set the background color to #000000
+            color: Color(0xFF094DB3), // Set the background color to #000000
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(25), // Add top-left radius of 15
               topRight: Radius.circular(25), // Add top-right radius of 15
@@ -455,16 +520,16 @@ class _WorkProfilePageState extends State<WorkProfilePage>
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             CustomIconButton(
-                              onTap: (){
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (contaxt)=> AsterImagePage()));
+                              onTap: () {
+                                Navigator.pop(context);
+                                cameraSelect();
                               },
                               height: 64,
                               width: 64,
                               shape: IconButtonShape.CircleBorder32,
                               child: CustomImageView(
                                 svgPath:
-                                ImageConstant.imgMaterialsymbolsphotocamera,
+                                    ImageConstant.imgMaterialsymbolsphotocamera,
                               ),
                             ),
                             Padding(
@@ -494,6 +559,10 @@ class _WorkProfilePageState extends State<WorkProfilePage>
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             CustomIconButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                                gallerySelected();
+                              },
                               height: 64,
                               width: 64,
                               margin: getMargin(
@@ -533,12 +602,14 @@ class _WorkProfilePageState extends State<WorkProfilePage>
     );
   }
 
-  onTapSave(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.homeOneScreen);
-  }
-  onTapAster(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes. asterImagePage);
-  }
+  // onTapSave(BuildContext context) {
+  //   Navigator.pushNamed(context, AppRoutes.homeOneScreen);
+  // }
+  //
+  // onTapAster(BuildContext context) {
+  //   Navigator.pushNamed(context, AppRoutes.asterImagePage);
+  // }
+
   //
   // onTapImgMaterialsymbols1(BuildContext context) {
   //   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
@@ -555,4 +626,51 @@ class _WorkProfilePageState extends State<WorkProfilePage>
   // onTapGridicons(BuildContext context) {
   //   Navigator.pushNamed(context, AppRoutes.frame37355Screen);
   // }
+
+  void uploadAndUpdateDocument() async {
+    final authRepository = AuthRepository();
+    var data = {'PanNumber': rectangle3405Controller.text,
+      'aadharCardNumber':rectangle3411Controller.text,
+    };
+    final response = await authRepository.updateAndUploadDocument(
+        data, pic!, panCard!,adharFront!, adharBack!, );
+    debugPrint(response.toString());
+    UpdateAndUploadModel updateAndUploadModel =
+        UpdateAndUploadModel.fromJson(response);
+    setState(() {
+      //updateAndUploadModel.msg!;
+    });
+  }
+
+  Future<File?> _getImageByGallery() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(
+        source: ImageSource
+            .gallery); // You can also use ImageSource.camera for capturing a new photo.
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      return imageFile;
+      // Use the 'imageFile' for uploading or displaying the selected image.
+    } else {
+      // User canceled the image picker.
+      return null;
+    }
+  }
+
+  Future<File?> _getImageByCamera() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(
+        source: ImageSource
+            .camera); // You can also use ImageSource.camera for capturing a new photo.
+
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      return imageFile;
+      // Use the 'imageFile' for uploading or displaying the selected image.
+    } else {
+      // User canceled the image picker.
+      return null;
+    }
+  }
 }

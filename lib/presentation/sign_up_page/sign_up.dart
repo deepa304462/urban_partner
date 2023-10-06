@@ -190,6 +190,7 @@ class SignUpScreen extends StatelessWidget {
         'isFromLogin': false,
         'phone': rectangle3408Controller.text,
       });
+      debugPrint(registerModel.data!.id!);
     } else {
       Utils.toastMassage(response['msg']);
     }

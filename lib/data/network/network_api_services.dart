@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
+import 'package:urban_partner/core/app_export.dart';
+import 'package:urban_partner/core/utils/utils.dart';
+
 import '../app_excaptions.dart';
 import 'base_api_services.dart';
 
@@ -36,6 +40,69 @@ class NetworkApiServices extends BaseApiServices {
     }
     return responseJson;
   }
+
+  @override
+  Future getPutApiResponse(String url, data, File? frontImage, File? backImage, File? pic, File? panCard) async {
+    dynamic responseJson;
+
+    try {
+      String token = await Utils.getFromSharedPreference(Constants.accessToken);
+
+      var request = http.MultipartRequest('PUT', Uri.parse(url));
+      request.headers['Authorization'] = 'Bearer $token';
+
+      // Add the files to the request
+      if (frontImage != null) {
+        request.files.add(http.MultipartFile(
+          'frontImage', // Field name for the file
+          frontImage.readAsBytes().asStream(),
+          frontImage.lengthSync(),
+          filename: 'front_image.jpg', // Adjust the filename as needed
+        ));
+      }
+
+      if (backImage != null) {
+        request.files.add(http.MultipartFile(
+          'backImage',
+          backImage.readAsBytes().asStream(),
+          backImage.lengthSync(),
+          filename: 'back_image.jpg',
+        ));
+      }
+
+      if (pic != null) {
+        request.files.add(http.MultipartFile(
+          'pic',
+          pic.readAsBytes().asStream(),
+          pic.lengthSync(),
+          filename: 'pic.jpg',
+        ));
+      }
+
+      if (panCard != null) {
+        request.files.add(http.MultipartFile(
+          'panCard',
+          panCard.readAsBytes().asStream(),
+          panCard.lengthSync(),
+          filename: 'pan_card.jpg',
+        ));
+      }
+
+      // Add other data fields to the request
+      data.forEach((key, value) {
+        request.fields[key] = value.toString();
+      });
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      responseJson = jsonDecode(response.body);
+    } on SocketException {
+      throw FetchDataException('No internet connection');
+    }
+
+    return responseJson;
+  }
+
 
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {

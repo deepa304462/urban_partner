@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
-import 'package:urban_partner/models/get_all_services_model.dart'as allService;
+import 'package:urban_partner/models/get_all_services_model.dart' as allService;
 import 'package:urban_partner/models/get_service_area_model.dart';
-import 'package:urban_partner/models/get_service_distance_model.dart' as service;
+import 'package:urban_partner/models/get_service_distance_model.dart'
+    as service;
 import 'package:urban_partner/widgets/custom_button.dart';
 
+import '../../models/update_and_upload_model.dart';
 import '../../repository/auth_repository.dart';
 
 class WorkProfileTwoPage extends StatefulWidget {
@@ -73,55 +77,53 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
                                 height: 8,
                               ),
                               Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey.shade300,width: 1),
-                                  borderRadius: BorderRadius.circular(8)
-                                ),
-                                  child: DropdownButtonFormField<
-                                      Msg>(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey.shade300,
+                                          width: 1),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: DropdownButtonFormField<Msg>(
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
-                                      contentPadding:
-                                          const EdgeInsets.all(8),
+                                      contentPadding: const EdgeInsets.all(8),
                                       suffixIcon: CustomImageView(
                                           svgPath: ImageConstant
                                               .imgVectorBlack9005x10,
                                           height: getVerticalSize(30),
-                                          width:
-                                              getHorizontalSize(10),
-                                          margin: getMargin(top: 6,bottom: 6,left: 30,right: 16)),
+                                          width: getHorizontalSize(10),
+                                          margin: getMargin(
+                                              top: 6,
+                                              bottom: 6,
+                                              left: 30,
+                                              right: 16)),
                                       hintText: 'Select Area',
                                       hintStyle: TextStyle(
                                         fontFamily: 'Inter',
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                         ),
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                     value: selectArea,
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontFamily:'Inter' ,
+                                        fontFamily: 'Inter',
                                         fontSize: 14),
                                     iconSize: 0,
                                     elevation: 16,
-                                    onChanged: (Msg?
-                                        newValue) {
+                                    onChanged: (Msg? newValue) {
                                       setState(() {
                                         selectArea = newValue;
                                         // Navigator.push(context, MaterialPageRoute(builder: (_)=>PincodeScreen()));
                                       });
                                     },
-                                    items: serviceAreaList.map<
-                                            DropdownMenuItem<
-                                                Msg>>(
-                                        (Msg value) {
-                                      return DropdownMenuItem<
-                                          Msg>(
+                                    items: serviceAreaList
+                                        .map<DropdownMenuItem<Msg>>(
+                                            (Msg value) {
+                                      return DropdownMenuItem<Msg>(
                                         value: value,
-                                        child: Text(
-                                            value.name.toString() ??
-                                                ''),
+                                        child:
+                                            Text(value.name.toString() ?? ''),
                                       );
                                     }).toList(),
                                   )),
@@ -141,22 +143,24 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
                               Container(
                                   height: 40,
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey.shade300,width: 1),
-                                      borderRadius: BorderRadius.circular(8)
-                                  ),
-                                  child: DropdownButtonFormField<
-                                      service.Msg>(
+                                      border: Border.all(
+                                          color: Colors.grey.shade300,
+                                          width: 1),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: DropdownButtonFormField<service.Msg>(
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
-                                      contentPadding:
-                                      const EdgeInsets.all(8),
+                                      contentPadding: const EdgeInsets.all(8),
                                       suffixIcon: CustomImageView(
                                           svgPath: ImageConstant
                                               .imgVectorBlack9005x10,
                                           height: getVerticalSize(30),
-                                          width:
-                                          getHorizontalSize(10),
-                                          margin: getMargin(top: 6,bottom: 6,left: 30,right: 16)),
+                                          width: getHorizontalSize(10),
+                                          margin: getMargin(
+                                              top: 6,
+                                              bottom: 6,
+                                              left: 30,
+                                              right: 16)),
                                       hintText: 'Select Distance',
                                       hintStyle: TextStyle(
                                         fontFamily: 'Inter',
@@ -167,29 +171,25 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
                                     value: selectDistance,
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontFamily:'Inter' ,
+                                        fontFamily: 'Inter',
                                         fontSize: 14),
                                     iconSize: 0,
                                     elevation: 16,
-                                    onChanged: (service.Msg?
-                                    newValue) {
+                                    onChanged: (service.Msg? newValue) {
                                       setState(() {
                                         selectDistance = newValue;
                                         // Navigator.push(context, MaterialPageRoute(builder: (_)=>PincodeScreen()));
                                       });
                                     },
-                                    items: serviceDistanceList.map<
-                                        DropdownMenuItem<
-                                            service.Msg>>(
+                                    items: serviceDistanceList
+                                        .map<DropdownMenuItem<service.Msg>>(
                                             (service.Msg value) {
-                                          return DropdownMenuItem<
-                                              service.Msg>(
-                                            value: value,
-                                            child: Text(
-                                                value.value.toString() ??
-                                                    ''),
-                                          );
-                                        }).toList(),
+                                      return DropdownMenuItem<service.Msg>(
+                                        value: value,
+                                        child:
+                                            Text(value.value.toString() ?? ''),
+                                      );
+                                    }).toList(),
                                   )),
                               Padding(
                                   padding: getPadding(top: 18),
@@ -207,22 +207,25 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
                               Container(
                                   height: 40,
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey.shade300,width: 1),
-                                      borderRadius: BorderRadius.circular(8)
-                                  ),
-                                  child: DropdownButtonFormField<
-                                     allService.Msg>(
+                                      border: Border.all(
+                                          color: Colors.grey.shade300,
+                                          width: 1),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child:
+                                      DropdownButtonFormField<allService.Msg>(
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
-                                      contentPadding:
-                                      const EdgeInsets.all(8),
+                                      contentPadding: const EdgeInsets.all(8),
                                       suffixIcon: CustomImageView(
                                           svgPath: ImageConstant
                                               .imgVectorBlack9005x10,
                                           height: getVerticalSize(30),
-                                          width:
-                                          getHorizontalSize(10),
-                                          margin: getMargin(top: 6,bottom: 6,left: 30,right: 16)),
+                                          width: getHorizontalSize(10),
+                                          margin: getMargin(
+                                              top: 6,
+                                              bottom: 6,
+                                              left: 30,
+                                              right: 16)),
                                       hintText: 'Select Service',
                                       hintStyle: TextStyle(
                                         fontFamily: 'Inter',
@@ -233,29 +236,26 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
                                     value: selectService,
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontFamily:'Inter' ,
+                                        fontFamily: 'Inter',
                                         fontSize: 14),
                                     iconSize: 0,
                                     elevation: 16,
-                                    onChanged: (allService.Msg?
-                                    newValue) {
+                                    onChanged: (allService.Msg? newValue) {
                                       setState(() {
                                         selectService = newValue;
+                                        debugPrint(selectService?.id);
                                         // Navigator.push(context, MaterialPageRoute(builder: (_)=>PincodeScreen()));
                                       });
                                     },
-                                    items: allServicesList.map<
-                                        DropdownMenuItem<
-                                            allService.Msg>>(
+                                    items: allServicesList
+                                        .map<DropdownMenuItem<allService.Msg>>(
                                             (allService.Msg value) {
-                                          return DropdownMenuItem<
-                                              allService.Msg>(
-                                            value: value,
-                                            child: Text(
-                                                value.name.toString() ??
-                                                    ''),
-                                          );
-                                        }).toList(),
+                                      return DropdownMenuItem<allService.Msg>(
+                                        value: value,
+                                        child:
+                                            Text(value.name.toString() ?? ''),
+                                      );
+                                    }).toList(),
                                   )),
                               SizedBox(
                                 height: MediaQuery.of(context).size.height / 4,
@@ -267,7 +267,7 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
                                   padding: ButtonPadding.PaddingAll11,
                                   fontStyle: ButtonFontStyle.InterSemiBold24,
                                   onTap: () {
-                                    // onTapSave(context);
+                                    uploadAndUpdateDocument();
                                   },
                                   alignment: Alignment.center)
                             ]))),
@@ -283,9 +283,9 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
   //   Navigator.pushNamed(context, AppRoutes.frame37354Screen);
   // }
 
-  onTapSave(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.workProfilePage);
-  }
+  // onTapSave(BuildContext context) {
+  //   Navigator.pushNamed(context, AppRoutes.workProfilePage);
+  // }
 
   void serviceArea() async {
     final authRepository = AuthRepository();
@@ -293,7 +293,6 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
 
     GetServiceAreaModel getServiceAreaModel =
         GetServiceAreaModel.fromJson(response);
-
     setState(() {
       serviceAreaList = getServiceAreaModel.msg!;
       print(serviceAreaList.length);
@@ -305,7 +304,7 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
     final response = await authRepository.serviceDistanceAreaApi();
 
     service.GetServiceDistanceModel getServiceDistanceModel =
-    service.GetServiceDistanceModel.fromJson(response);
+        service.GetServiceDistanceModel.fromJson(response);
 
     setState(() {
       serviceDistanceList = getServiceDistanceModel.msg!;
@@ -317,13 +316,34 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
     final authRepository = AuthRepository();
     final response = await authRepository.allServiceApi();
     debugPrint(response.toString());
-
     allService.GetAllServicesModel getAllServicesModel =
-    allService.GetAllServicesModel.fromJson(response);
-
+        allService.GetAllServicesModel.fromJson(response);
     setState(() {
       allServicesList = getAllServicesModel.msg!;
       print(allServicesList.length);
+    });
+  }
+
+  void uploadAndUpdateDocument() async {
+    final authRepository = AuthRepository();
+    var data = {
+      'serviceArea': selectArea,
+      'serviceDistance': selectDistance,
+      'serviceName':selectService,
+    };
+    File? pic, panCard, adharFront, adharBack;
+    final response = await authRepository.updateAndUploadDocument(
+      data,
+      pic,
+      panCard,
+      adharFront,
+      adharBack,
+    );
+    debugPrint(response.toString());
+    UpdateAndUploadModel updateAndUploadModel =
+        UpdateAndUploadModel.fromJson(response);
+    setState(() {
+      // updateAndUploadModel.msg!;
     });
   }
 }

@@ -1,3 +1,9 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:urban_partner/core/app_export.dart';
+import 'package:urban_partner/core/utils/utils.dart';
+
 import '../data/network/base_api_services.dart';
 import '../data/network/network_api_services.dart';
 import '../res/components/app_url.dart';
@@ -25,11 +31,10 @@ class AuthRepository {
     }
   }
 
-
   Future<dynamic> logInApi(dynamic data) async {
     try {
       dynamic response =
-      await _apiServices.getPostApiResponse(AppUrl.loginUrl, data);
+          await _apiServices.getPostApiResponse(AppUrl.loginUrl, data);
       return response;
     } catch (e) {
       throw e;
@@ -38,19 +43,17 @@ class AuthRepository {
 
   Future<dynamic> allCityApi() async {
     try {
-      dynamic response =
-      await _apiServices.getGetApiResponse(AppUrl.allCity);
+      dynamic response = await _apiServices.getGetApiResponse(AppUrl.allCity);
       return response;
     } catch (e) {
       throw e;
     }
   }
 
-
   Future<dynamic> serviceAreaApi() async {
     try {
       dynamic response =
-      await _apiServices.getGetApiResponse(AppUrl.serviceArea);
+          await _apiServices.getGetApiResponse(AppUrl.serviceArea);
       return response;
     } catch (e) {
       throw e;
@@ -60,7 +63,7 @@ class AuthRepository {
   Future<dynamic> serviceDistanceAreaApi() async {
     try {
       dynamic response =
-      await _apiServices.getGetApiResponse(AppUrl.serviceDistance);
+          await _apiServices.getGetApiResponse(AppUrl.serviceDistance);
       return response;
     } catch (e) {
       throw e;
@@ -70,11 +73,33 @@ class AuthRepository {
   Future<dynamic> allServiceApi() async {
     try {
       dynamic response =
-      await _apiServices.getGetApiResponse(AppUrl.allServices);
+          await _apiServices.getGetApiResponse(AppUrl.allServices);
       return response;
     } catch (e) {
       throw e;
     }
   }
 
+  Future<dynamic> updateAndUploadDocument(
+    dynamic data,
+    File? pic,
+    File? panCard,
+    File? frontImage,
+    File? backImage,
+  ) async {
+    try {
+      String userId = await Utils.getFromSharedPreference(Constants.userId);
+      debugPrint(AppUrl.updateAndUploadDocument + "/" + userId);
+      dynamic response = await _apiServices.getPutApiResponse(
+          AppUrl.updateAndUploadDocument + "/" + userId,
+          data,
+          frontImage,
+          backImage,
+          pic,
+          panCard);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
