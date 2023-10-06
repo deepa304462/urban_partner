@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/models/update_and_upload_model.dart';
+import 'package:urban_partner/presentation/home_screen/home_screen.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_text_form_field.dart';
 
@@ -46,6 +47,7 @@ class _WorkProfilePageState extends State<WorkProfilePage>
   File? adharFront;
   File? adharBack;
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -431,7 +433,7 @@ class _WorkProfilePageState extends State<WorkProfilePage>
                                                 width: getHorizontalSize(10),
                                                 margin: getMargin(top: 1))
                                           ])))),
-                          CustomButton(
+                         _isLoading?Center(child: CircularProgressIndicator(),): CustomButton(
                               onTap: () {
                                 if (_formKey.currentState!.validate()) {
                                   uploadAndUpdateDocument();
@@ -628,12 +630,19 @@ class _WorkProfilePageState extends State<WorkProfilePage>
   // }
 
   void uploadAndUpdateDocument() async {
+    setState(() {
+      _isLoading = true;
+    });
     final authRepository = AuthRepository();
     var data = {'PanNumber': rectangle3405Controller.text,
       'aadharCardNumber':rectangle3411Controller.text,
     };
     final response = await authRepository.updateAndUploadDocument(
         data, pic!, panCard!,adharFront!, adharBack!, );
+    Navigator.push(context, MaterialPageRoute(builder: (context) =>HomeScreen() ,));
+    setState(() {
+      _isLoading = false;
+    });
     debugPrint(response.toString());
     UpdateAndUploadModel updateAndUploadModel =
         UpdateAndUploadModel.fromJson(response);

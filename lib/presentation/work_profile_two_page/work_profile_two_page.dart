@@ -36,6 +36,7 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
   Msg? selectArea;
   service.Msg? selectDistance;
   allService.Msg? selectService;
+  bool _isLoading = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -260,7 +261,7 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
                               SizedBox(
                                 height: MediaQuery.of(context).size.height / 4,
                               ),
-                              CustomButton(
+                             _isLoading ?Center(child:CircularProgressIndicator()): CustomButton(
                                   width: getHorizontalSize(195),
                                   text: "Save",
                                   shape: ButtonShape.RoundedBorder26,
@@ -325,12 +326,18 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
   }
 
   void uploadAndUpdateDocument() async {
+    setState(() {
+      _isLoading = true;
+    });
     final authRepository = AuthRepository();
     var data = {
       'serviceArea': selectArea,
       'serviceDistance': selectDistance,
       'serviceName':selectService,
     };
+    setState(() {
+      _isLoading = false;
+    });
     File? pic, panCard, adharFront, adharBack;
     final response = await authRepository.updateAndUploadDocument(
       data,
