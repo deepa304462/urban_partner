@@ -50,6 +50,16 @@ class AuthRepository {
     }
   }
 
+  Future<dynamic> createAddressApi(dynamic data) async {
+    try {
+      dynamic response =
+      await _apiServices.getPostApiResponse(AppUrl.createAddress, data);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future<dynamic> serviceAreaApi() async {
     try {
       dynamic response =
@@ -97,6 +107,15 @@ class AuthRepository {
           backImage,
           pic,
           panCard);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<dynamic> getProfileApi() async {
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(AppUrl.getProfile);
       return response;
     } catch (e) {
       throw e;

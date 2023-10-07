@@ -141,9 +141,9 @@ class _WorkProfileTabContainerScreenState
                         child: TabBarView(
                           controller: tabviewController,
                           children: [
-                            WorkProfileTwoPage(),
+                            WorkProfileTwoPage(tabviewController),
                             // AsterImagePage(),
-                            WorkProfilePage()
+                            WorkProfilePage(tabviewController)
                           ],
                         ),
                       ),

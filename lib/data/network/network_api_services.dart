@@ -14,8 +14,16 @@ class NetworkApiServices extends BaseApiServices {
     dynamic responseJson;
 
     try {
+
+      String token = await Utils.getFromSharedPreference(Constants.accessToken);
+      Map<String,String> header = {
+        "Authorization" : 'Bearer $token'
+      };
+
+
+
       final response =
-          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
+          await http.get(Uri.parse(url),headers: header).timeout(const Duration(seconds: 10));
       responseJson = jsonDecode(response.body);
     } on SocketException {
       throw FetchDataException('No internet connection');

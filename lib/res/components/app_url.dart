@@ -15,6 +15,10 @@ class AppUrl {
 
   static var allServices = baseUrl + "api/v1/service";
 
+  static var createAddress = baseUrl +"api/v1/address";
+
   static var updateAndUploadDocument =
       baseUrl + "api/v1/vendor/updateFileAndDocumentVendor";
+
+  static var getProfile = baseUrl+"/api/v1/vendor/getProfileVendor";
 }

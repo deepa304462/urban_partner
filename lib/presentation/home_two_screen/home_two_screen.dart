@@ -1,3 +1,5 @@
+import 'package:urban_partner/models/register_model.dart';
+
 import '../home_two_screen/widgets/listservice3_item_widget.dart';
 import '../home_two_screen/widgets/listservice4_item_widget.dart';
 import '../home_two_screen/widgets/listservice5_item_widget.dart';
@@ -12,7 +14,13 @@ import 'package:urban_partner/widgets/app_bar/appbar_subtitle_9.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
 
-class HomeTwoScreen extends StatelessWidget {
+class HomeTwoScreen extends StatefulWidget {
+  RegisterModel registerModel = RegisterModel();
+  @override
+  State<HomeTwoScreen> createState() => _HomeTwoScreenState();
+}
+
+class _HomeTwoScreenState extends State<HomeTwoScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,7 +44,7 @@ class HomeTwoScreen extends StatelessWidget {
                               text: "Lead Wallet",
                               margin: getMargin(left: 141)),
                           AppbarSubtitle8(
-                              text: "Anil Kumar",
+                              text: widget.registerModel.data!.fullName.toString(),
                               margin: getMargin(right: 139), style: TextStyle(),),
                           AppbarSubtitle9(
                               text: "Mukundpur,",

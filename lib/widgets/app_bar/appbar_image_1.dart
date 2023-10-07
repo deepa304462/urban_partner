@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
 
 // ignore: must_be_immutable
-class AppbarImage1 extends StatelessWidget {
+class AppbarImage1 extends StatefulWidget {
   AppbarImage1(
       {required this.height,
       required this.width,
@@ -24,19 +24,24 @@ class AppbarImage1 extends StatelessWidget {
   Function? onTap;
 
   @override
+  State<AppbarImage1> createState() => _AppbarImage1State();
+}
+
+class _AppbarImage1State extends State<AppbarImage1> {
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadiusStyle.circleBorder37,
       onTap: () {
-        onTap?.call();
+        widget.onTap?.call();
       },
       child: Padding(
-        padding: margin ?? EdgeInsets.zero,
+        padding: widget.margin ?? EdgeInsets.zero,
         child: CustomImageView(
-          svgPath: svgPath,
-          imagePath: imagePath,
-          height: height,
-          width: width,
+          svgPath: widget.svgPath,
+          imagePath: widget.imagePath,
+          height: widget.height,
+          width: widget.width,
           fit: BoxFit.contain,
           radius: BorderRadius.circular(
             getHorizontalSize(

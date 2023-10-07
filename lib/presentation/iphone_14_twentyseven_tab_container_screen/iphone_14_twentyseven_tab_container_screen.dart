@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/presentation/iphone_14_twentyseven_page/iphone_14_twentyseven_page.dart';
+import 'package:urban_partner/presentation/view_bank_detail_page/view_bank_detail_page.dart';
+import 'package:urban_partner/presentation/view_documents_page/view_documents_page.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_circleimage.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_iconbutton.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
@@ -100,8 +102,8 @@ class _Iphone14TwentysevenTabContainerScreenState
                                   controller: tabviewController,
                                   children: [
                                     Iphone14TwentysevenPage(),
-                                    Iphone14TwentysevenPage(),
-                                    Iphone14TwentysevenPage()
+                                    ViewBankDetailPage(),
+                                    ViewDocumentPage(),
                                   ]))
                         ])))));
   }

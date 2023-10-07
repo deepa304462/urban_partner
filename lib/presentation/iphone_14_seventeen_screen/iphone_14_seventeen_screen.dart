@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
+import 'package:urban_partner/models/register_model.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_image.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_subtitle_10.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
@@ -7,7 +8,13 @@ import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_drop_down.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
 
-class Iphone14SeventeenScreen extends StatelessWidget {
+class Iphone14SeventeenScreen extends StatefulWidget {
+  RegisterModel registerModel = RegisterModel();
+  @override
+  State<Iphone14SeventeenScreen> createState() => _Iphone14SeventeenScreenState();
+}
+
+class _Iphone14SeventeenScreenState extends State<Iphone14SeventeenScreen> {
   List<String> dropdownItemList = [
     "Item One",
     "Item Two",
@@ -45,7 +52,7 @@ class Iphone14SeventeenScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: "Anil Kumar",
+                    text: widget.registerModel.data?.fullName.toString(),
                     style: TextStyle(
                       color: ColorConstant.blue900,
                       fontSize: getFontSize(

@@ -6,12 +6,16 @@ import 'package:urban_partner/models/get_all_services_model.dart' as allService;
 import 'package:urban_partner/models/get_service_area_model.dart';
 import 'package:urban_partner/models/get_service_distance_model.dart'
     as service;
+import 'package:urban_partner/presentation/work_profile_page/work_profile_page.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 
 import '../../models/update_and_upload_model.dart';
 import '../../repository/auth_repository.dart';
 
 class WorkProfileTwoPage extends StatefulWidget {
+  TabController tabviewController;
+  WorkProfileTwoPage(this.tabviewController);
+
   @override
   _WorkProfileTwoPageState createState() => _WorkProfileTwoPageState();
 
@@ -331,13 +335,11 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
     });
     final authRepository = AuthRepository();
     var data = {
-      'serviceArea': selectArea,
-      'serviceDistance': selectDistance,
-      'serviceName':selectService,
+      'serviceArea': selectArea!.id,
+      'serviceDistance': selectDistance!.id,
+      'serviceName':selectService!.id,
     };
-    setState(() {
-      _isLoading = false;
-    });
+
     File? pic, panCard, adharFront, adharBack;
     final response = await authRepository.updateAndUploadDocument(
       data,
@@ -346,6 +348,11 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
       adharFront,
       adharBack,
     );
+    setState(() {
+      _isLoading = false;
+    });
+    widget.tabviewController.animateTo(1);
+    //Navigator.push(context, MaterialPageRoute(builder: (_)=>WorkProfilePage()));
     debugPrint(response.toString());
     UpdateAndUploadModel updateAndUploadModel =
         UpdateAndUploadModel.fromJson(response);

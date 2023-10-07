@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/models/all_city_model.dart';
+import 'package:urban_partner/models/create_address_model.dart';
 import 'package:urban_partner/models/login_model.dart';
 import 'package:urban_partner/presentation/pincoe_screen/pincoe_screen.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
@@ -277,7 +278,7 @@ class _SelectCityScreenState extends State<SelectCityScreen> {
                                   onChanged: (AllCityModel? newValue) {
                                     setState(() {
                                       selectedCity = newValue;
-                                     Navigator.push(context, MaterialPageRoute(builder: (_)=>PincodeScreen('')));
+                                     addCityInAddress();
                                     });
                                   },
                                   items: cityList
@@ -447,5 +448,21 @@ class _SelectCityScreenState extends State<SelectCityScreen> {
     });
 
     print(cityList.length);
+  }
+
+  addCityInAddress() async {
+    final authRepository = AuthRepository();
+
+    Map<String, String> data = {
+      'state': selectedCity!.selectcity ?? '',
+    };
+    print(data);
+    final response = await authRepository.createAddressApi(data);
+    CreateAddressModel createAddressModel = CreateAddressModel.fromJson(response);
+
+
+    if (createAddressModel.data != null){
+      Navigator.push(context, MaterialPageRoute(builder: (_)=>PincodeScreen('')));
+    }
   }
 }

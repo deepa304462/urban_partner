@@ -12,6 +12,8 @@ import '../../repository/auth_repository.dart';
 import '../../widgets/custom_icon_button.dart';
 
 class WorkProfilePage extends StatefulWidget {
+  WorkProfilePage(TabController tabviewController);
+
   @override
   _WorkProfilePageState createState() => _WorkProfilePageState();
 // onTapImgMaterialsymbols(BuildContext context) {
@@ -35,9 +37,6 @@ class WorkProfilePage extends StatefulWidget {
 // }
 }
 
-// ignore_for_file: must_be_immutable
-
-// ignore_for_file: must_be_immutable
 class _WorkProfilePageState extends State<WorkProfilePage>
     with AutomaticKeepAliveClientMixin<WorkProfilePage> {
   TextEditingController rectangle3405Controller = TextEditingController();
@@ -140,11 +139,7 @@ class _WorkProfilePageState extends State<WorkProfilePage>
                                     fontWeight: FontWeight.w400,
                                   ))),
                           CustomTextFormField(
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please enter PAN number';
-                                }
-                              },
+                              validator: _validatePAN,
                               focusNode: FocusNode(),
                               controller: rectangle3405Controller,
                               margin: getMargin(top: 8)),
@@ -225,11 +220,7 @@ class _WorkProfilePageState extends State<WorkProfilePage>
                                     fontWeight: FontWeight.w400,
                                   ))),
                           CustomTextFormField(
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Please enter Adhar Number';
-                                }
-                              },
+                              validator: _validateAadhar,
                               focusNode: FocusNode(),
                               controller: rectangle3411Controller,
                               margin: getMargin(top: 8),
@@ -262,14 +253,12 @@ class _WorkProfilePageState extends State<WorkProfilePage>
                                         bottom: 2,
                                       ),
                                       child: adharFront == null
-                                          ? Center(
-                                              child: Text(
-                                                  "Upload Adhar card\nfront side image Here",
-                                                  maxLines: null,
-                                                  textAlign: TextAlign.left,
-                                                  style: AppStyle
-                                                      .txtInterRegular16Black90087),
-                                            )
+                                          ? Text(
+                                              "Upload Adhar card\nfront side image Here",
+                                              maxLines: null,
+                                              textAlign: TextAlign.left,
+                                              style: AppStyle
+                                                  .txtInterRegular16Black90087)
                                           : Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 30, right: 30),
@@ -433,23 +422,27 @@ class _WorkProfilePageState extends State<WorkProfilePage>
                                                 width: getHorizontalSize(10),
                                                 margin: getMargin(top: 1))
                                           ])))),
-                         _isLoading?Center(child: CircularProgressIndicator(),): CustomButton(
-                              onTap: () {
-                                if (_formKey.currentState!.validate()) {
-                                  uploadAndUpdateDocument();
-                                }
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => Dashboard()));
-                              },
-                              width: getHorizontalSize(195),
-                              text: "Save",
-                              margin: getMargin(top: 100),
-                              shape: ButtonShape.RoundedBorder26,
-                              padding: ButtonPadding.PaddingAll11,
-                              fontStyle: ButtonFontStyle.InterSemiBold24,
-                              alignment: Alignment.center)
+                          _isLoading
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : CustomButton(
+                                  onTap: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      uploadAndUpdateDocument();
+                                    }
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) => Dashboard()));
+                                  },
+                                  width: getHorizontalSize(195),
+                                  text: "Save",
+                                  margin: getMargin(top: 100),
+                                  shape: ButtonShape.RoundedBorder26,
+                                  padding: ButtonPadding.PaddingAll11,
+                                  fontStyle: ButtonFontStyle.InterSemiBold24,
+                                  alignment: Alignment.center)
                         ]))
               ]),
             ))),
@@ -634,18 +627,30 @@ class _WorkProfilePageState extends State<WorkProfilePage>
       _isLoading = true;
     });
     final authRepository = AuthRepository();
-    var data = {'PanNumber': rectangle3405Controller.text,
-      'aadharCardNumber':rectangle3411Controller.text,
+    var data = {
+      'PanNumber': rectangle3405Controller.text,
+      'aadharCardNumber': rectangle3411Controller.text,
     };
     final response = await authRepository.updateAndUploadDocument(
-        data, pic!, panCard!,adharFront!, adharBack!, );
-    Navigator.push(context, MaterialPageRoute(builder: (context) =>HomeScreen() ,));
+      data,
+      pic!,
+      panCard!,
+      adharFront!,
+      adharBack!,
+    );
     setState(() {
       _isLoading = false;
     });
-    debugPrint(response.toString());
     UpdateAndUploadModel updateAndUploadModel =
-        UpdateAndUploadModel.fromJson(response);
+    UpdateAndUploadModel.fromJson(response);
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(),
+        ));
+
+    debugPrint(response.toString());
+
     setState(() {
       //updateAndUploadModel.msg!;
     });
@@ -681,5 +686,29 @@ class _WorkProfilePageState extends State<WorkProfilePage>
       // User canceled the image picker.
       return null;
     }
+  }
+
+  String? _validatePAN(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter PAN number';
+    }
+    // Basic PAN card format validation
+    RegExp panRegex = RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]$');
+    if (!panRegex.hasMatch(value)) {
+      return 'Invalid PAN number';
+    }
+    return null; // PAN number is valid
+  }
+
+  String? _validateAadhar(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter Aadhar number';
+    }
+    // Basic Aadhar card format validation
+    RegExp aadharRegex = RegExp(r'^[0-9]{12}$');
+    if (!aadharRegex.hasMatch(value)) {
+      return 'Invalid Aadhar number';
+    }
+    return null; // Aadhar number is valid
   }
 }

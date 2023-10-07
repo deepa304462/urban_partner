@@ -1,3 +1,5 @@
+import 'package:urban_partner/models/register_model.dart';
+import 'package:urban_partner/models/update_and_upload_model.dart';
 import 'package:urban_partner/presentation/after_activating_screen/after_activating_screen.dart';
 import 'package:urban_partner/presentation/home_screen/widgets/listservice1_item_widget.dart';
 import 'package:urban_partner/presentation/home_screen/widgets/listservice2_item_widget.dart';
@@ -20,7 +22,14 @@ import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
 
-class HomeOneScreen extends StatelessWidget {
+class HomeOneScreen extends StatefulWidget {
+  RegisterModel registerModel = RegisterModel();
+  UpdateAndUploadModel updateAndUploadModel = UpdateAndUploadModel();
+  @override
+  State<HomeOneScreen> createState() => _HomeOneScreenState();
+}
+
+class _HomeOneScreenState extends State<HomeOneScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -48,7 +57,7 @@ class HomeOneScreen extends StatelessWidget {
                   Column(
                     children: [
                       AppbarSubtitle8(
-                        text: "Anil Kumar",
+                        text: widget.registerModel.data!.fullName.toString(),
                         margin: getMargin(),
                         style: TextStyle(
                           fontSize: 12,
@@ -440,20 +449,6 @@ class HomeOneScreen extends StatelessWidget {
   onTapTxtMissedjob(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.missedJobsScreen);
   }
-
-  // onTapColumnrefresh(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.ongoingPressScreen);
-  // }
-
-  // onTapColumnframetwo(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.profileScreen);
-  // }
-  // onTapRaCScreen(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.racAroundScreen);
-  // }
-  // onTapShoppingPanel(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.shoppingPanelScreen);
-  // }
 }
 void bottomSheet(context) {
   showModalBottomSheet(

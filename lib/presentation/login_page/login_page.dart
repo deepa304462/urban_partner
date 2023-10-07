@@ -136,6 +136,7 @@ class LogInScreen extends StatelessWidget {
       Utils.toastMassage(loginModel.data!.otp.toString());
       Navigator.pushNamed(context, AppRoutes.otpScreen, arguments: {
         'otpId': loginModel.data!.id!,
+        'fullName':loginModel.data!.fullName,
         'isFromLogin': true,
         'phone': rectangle3408Controller.text
       });

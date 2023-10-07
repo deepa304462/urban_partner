@@ -1,11 +1,15 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:urban_partner/common.dart';
 import 'package:urban_partner/core/app_export.dart';
-import 'package:urban_partner/models/update_profile_request_model.dart';
+import 'package:urban_partner/models/update_and_upload_model.dart';
 import 'package:urban_partner/presentation/work_profile_one_screen/work_profile_one_screen.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
+
+import '../../repository/auth_repository.dart';
 
 class PincodeScreen extends StatefulWidget {
   PincodeScreen(String? id);
@@ -16,6 +20,7 @@ class PincodeScreen extends StatefulWidget {
 }
 
 class _PincodeScreenState extends State<PincodeScreen> {
+  TextEditingController _pinCodeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
@@ -86,6 +91,7 @@ class _PincodeScreenState extends State<PincodeScreen> {
                   borderRadius: BorderRadius.circular(getHorizontalSize(7)),
                 ),
                 child: TextFormField(
+                    controller: _pinCodeController,
                   validator: (value) {
                     if (value == null) {
                       return 'Please enter pincode';
@@ -107,7 +113,6 @@ class _PincodeScreenState extends State<PincodeScreen> {
                     color: Colors.black,
                   ),
                   onChanged: (value) {
-                    Common.updateProfileRequestModel.pinCode = value;
                   },
                 ),
               ),
@@ -123,7 +128,7 @@ class _PincodeScreenState extends State<PincodeScreen> {
                   fontStyle: ButtonFontStyle.MulishItalicExtraBlack24,
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
-                      onTapContinue(context);
+                      uploadAndUpdateDocument();
                     }
                   }),
               Spacer(),
@@ -159,13 +164,33 @@ class _PincodeScreenState extends State<PincodeScreen> {
     );
   }
 
-  onTapContinue(BuildContext context) {
+  void uploadAndUpdateDocument() async {
     setState(() {
       _isLoading = true;
     });
-    Navigator.pushNamed(context, AppRoutes.workProfileTabContainerScreen,);
+    final authRepository = AuthRepository();
+    var data = {
+      'pincode': _pinCodeController.text,
+
+    };
+    File? pic, panCard, adharFront, adharBack;
+    final response = await authRepository.updateAndUploadDocument(
+      data,
+      pic,
+      panCard,
+      adharFront,
+      adharBack,
+    );
     setState(() {
-      _isLoading =false;
+      _isLoading = false;
+    });
+    Navigator.pushNamed(context, AppRoutes.workProfileTabContainerScreen,);
+    debugPrint(response.toString());
+    UpdateAndUploadModel updateAndUploadModel =
+    UpdateAndUploadModel.fromJson(response);
+    setState(() {
+      // updateAndUploadModel.msg!;
     });
   }
+
 }

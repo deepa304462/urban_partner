@@ -1,8 +1,5 @@
-import 'package:urban_partner/presentation/rac_around_screen/rac_around_screen.dart';
-import 'package:urban_partner/presentation/rac_around_screen/rac_around_screen.dart';
-import 'package:urban_partner/presentation/rac_around_screen/rac_around_screen.dart';
-import 'package:urban_partner/presentation/rac_around_screen/rac_around_screen.dart';
-
+import 'package:urban_partner/models/get_profile_model.dart';
+import '../../repository/auth_repository.dart';
 import '../home_screen/widgets/listservice1_item_widget.dart';
 import '../home_screen/widgets/listservice2_item_widget.dart';
 import '../home_screen/widgets/listservice_item_widget.dart';
@@ -11,7 +8,21 @@ import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  GetProfileModel getProfileModel = GetProfileModel();
+  @override
+  void initState() {
+    getProfileData();
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -19,7 +30,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: ColorConstant.whiteA700,
         body: Container(
           width: double.maxFinite,
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          child: getProfileModel.data == null ? Center(child: CircularProgressIndicator()) : Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -89,7 +100,7 @@ class HomeScreen extends StatelessWidget {
                                                               width:
                                                                   getHorizontalSize(
                                                                       70),
-                                                              text: "5,000",
+                                                              text: getProfileModel.data!.wallet.toString(),
                                                               margin: getMargin(
                                                                   left: 8),
                                                               variant: ButtonVariant
@@ -223,7 +234,7 @@ class HomeScreen extends StatelessWidget {
                                                 Padding(
                                                     padding: getPadding(
                                                         top: 8, bottom: 2),
-                                                    child: Text("Anil Kumar",
+                                                    child: Text(getProfileModel.data!.fullName ?? "",
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         textAlign:
@@ -250,7 +261,7 @@ class HomeScreen extends StatelessWidget {
                                                     height: getVerticalSize(26),
                                                     width:
                                                         getHorizontalSize(70),
-                                                    text: "10 Leads",
+                                                    text: getProfileModel.data!.lead.toString(),
                                                     margin: getMargin(left: 8),
                                                     variant: ButtonVariant
                                                         .FillTeal800,
@@ -271,7 +282,7 @@ class HomeScreen extends StatelessWidget {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
-                                                Text("Mukundpur,",
+                                                Text(getProfileModel.data!.address ?? "",
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     textAlign: TextAlign.left,
@@ -714,5 +725,14 @@ class HomeScreen extends StatelessWidget {
 
   onTapColumnframetwo(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.profileScreen);
+  }
+
+  getProfileData() async {
+    final authRepository = AuthRepository();
+    final response  = await authRepository.getProfileApi();
+     getProfileModel = GetProfileModel.fromJson(response);
+     setState(() {
+
+     });
   }
 }
