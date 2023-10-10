@@ -23,7 +23,6 @@ import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_icon_button.dart';
 
 class HomeOneScreen extends StatefulWidget {
-  RegisterModel registerModel = RegisterModel();
   UpdateAndUploadModel updateAndUploadModel = UpdateAndUploadModel();
   @override
   State<HomeOneScreen> createState() => _HomeOneScreenState();
@@ -56,15 +55,7 @@ class _HomeOneScreenState extends State<HomeOneScreen> {
                   ),
                   Column(
                     children: [
-                      AppbarSubtitle8(
-                        text: widget.registerModel.data!.fullName.toString(),
-                        margin: getMargin(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontFamily: "Inter",
-                          fontWeight: FontWeight.w700
-                        ),
-                      ),
+
                       AppbarSubtitle9(
                         text: "Mukundpur,",
                         margin: getMargin(

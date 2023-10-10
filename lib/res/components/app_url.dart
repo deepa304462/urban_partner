@@ -21,4 +21,6 @@ class AppUrl {
       baseUrl + "api/v1/vendor/updateFileAndDocumentVendor";
 
   static var getProfile = baseUrl+"/api/v1/vendor/getProfileVendor";
+
+  static var onGoingServices = baseUrl+"api/v1/cartAndOrder/ongoing/job/";
 }

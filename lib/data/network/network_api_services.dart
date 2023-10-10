@@ -14,16 +14,12 @@ class NetworkApiServices extends BaseApiServices {
     dynamic responseJson;
 
     try {
-
       String token = await Utils.getFromSharedPreference(Constants.accessToken);
-      Map<String,String> header = {
-        "Authorization" : 'Bearer $token'
-      };
+      Map<String, String> header = {"Authorization": 'Bearer $token'};
 
-
-
-      final response =
-          await http.get(Uri.parse(url),headers: header).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(Uri.parse(url), headers: header)
+          .timeout(const Duration(seconds: 10));
       responseJson = jsonDecode(response.body);
     } on SocketException {
       throw FetchDataException('No internet connection');
@@ -50,7 +46,8 @@ class NetworkApiServices extends BaseApiServices {
   }
 
   @override
-  Future getPutApiResponse(String url, data, File? frontImage, File? backImage, File? pic, File? panCard) async {
+  Future getPutApiResponse(String url, data, File? frontImage, File? backImage,
+      File? pic, File? panCard) async {
     dynamic responseJson;
 
     try {
@@ -110,7 +107,6 @@ class NetworkApiServices extends BaseApiServices {
 
     return responseJson;
   }
-
 
   dynamic returnResponse(http.Response response) {
     switch (response.statusCode) {

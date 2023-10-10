@@ -121,4 +121,15 @@ class AuthRepository {
       throw e;
     }
   }
+
+  Future<dynamic> onGoingService() async {
+    try {
+      String userId = await Utils.getFromSharedPreference(Constants.userId);
+      dynamic response = await _apiServices.getGetApiResponse(AppUrl.onGoingServices+userId);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
 }

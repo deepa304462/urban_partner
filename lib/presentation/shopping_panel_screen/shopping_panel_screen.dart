@@ -23,7 +23,7 @@ class ShoppingPanelScreen extends StatelessWidget {
           leading: AppbarIconbutton(
             svgPath: ImageConstant.imgGroup295,
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
+             // Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
             },
           ),
           centerTitle: true,

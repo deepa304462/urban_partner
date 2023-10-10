@@ -131,7 +131,8 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
                                             Text(value.name.toString() ?? ''),
                                       );
                                     }).toList(),
-                                  )),
+                                  )
+                              ),
                               Padding(
                                   padding: getPadding(top: 22),
                                   child: Text("Serviceable Distance (in km)",
