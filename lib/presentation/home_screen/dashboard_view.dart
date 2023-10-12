@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:urban_partner/presentation/home_one_screen/home_one_screen.dart';
+import 'package:urban_partner/presentation/home_screen/home_screen.dart';
 import 'package:urban_partner/presentation/ongoing_press_screen/ongoing_press_screen.dart';
 import 'package:urban_partner/shared/ui_constant.dart';
 
 import '../../core/utils/image_constant.dart';
-import '../../theme/app_style.dart';
 import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_image_view.dart';
 import '../profile_screen/profile_screen.dart';
@@ -23,8 +22,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   int selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
-    // HomeOneScreen(),
-    HomeOneScreen(),
+    HomeScreen(),
     OngoingPressScreen(),
     RacAroundScreen(),
     ShoppingPanelScreen(),
@@ -34,20 +32,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     super.initState();
-  }
-
-  void _onItemTapped(int index) {
-    selectedIndex = index;
-    setState(() {});
-    if (index != 2) {
-      setState(() {
-        selectedIndex = index;
-      });
-    } else {
-      setState(() {
-        selectedIndex = index;
-      });
-    }
   }
 
   @override
@@ -86,24 +70,19 @@ class _DashboardState extends State<Dashboard> {
               width: 40,
               decoration: const BoxDecoration(
                   shape: BoxShape.circle, color: MyConstant.blue179),
-              child:  CustomIconButton(
+              child: CustomIconButton(
                   height: 40,
                   width: 40,
-                  variant: IconButtonVariant
-                      .FillBlue900,
-                  padding: IconButtonPadding
-                      .PaddingAll8,
-                  child: CustomImageView(
-                      svgPath: ImageConstant
-                          .imgRefresh)),
-
-            ),
-            icon: CustomIconButton(
-                  height: 40,
-                  width: 40,
-                  variant: IconButtonVariant.FillBlack9007f,
+                  variant: IconButtonVariant.FillBlue900,
                   padding: IconButtonPadding.PaddingAll8,
                   child: CustomImageView(svgPath: ImageConstant.imgRefresh)),
+            ),
+            icon: CustomIconButton(
+                height: 40,
+                width: 40,
+                variant: IconButtonVariant.FillBlack9007f,
+                padding: IconButtonPadding.PaddingAll8,
+                child: CustomImageView(svgPath: ImageConstant.imgRefresh)),
             label: ("Ongoing"),
           ),
           BottomNavigationBarItem(
@@ -173,7 +152,7 @@ class _DashboardState extends State<Dashboard> {
         currentIndex: selectedIndex,
         unselectedItemColor: MyConstant.grey,
         selectedItemColor: MyConstant.buttonDarkColor,
-        onTap: _onItemTapped,
+        onTap: (index) => setState(() => selectedIndex = index),
         elevation: 10,
       ),
     );

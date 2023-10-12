@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:urban_partner/presentation/home_screen/dashboard_view.dart';
 import 'package:urban_partner/routes/app_routes.dart';
 
 void main() {
@@ -19,8 +20,8 @@ class MyApp extends StatelessWidget {
       ),
       title: 'urban_partner',
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.iphone14NineScreen,
       routes: AppRoutes.routes,
+      home: Dashboard(),
     );
   }
 }

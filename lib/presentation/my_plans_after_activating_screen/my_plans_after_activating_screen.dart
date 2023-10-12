@@ -1,5 +1,7 @@
 import 'package:urban_partner/presentation/profile_screen/profile_screen.dart';
 
+import '../../models/get_all_subscription_plan.dart';
+import '../../repository/auth_repository.dart';
 import '../my_plans_after_activating_screen/widgets/listsilverplan_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
@@ -7,7 +9,19 @@ import 'package:urban_partner/widgets/app_bar/appbar_iconbutton.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_subtitle_1.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
 
-class MyPlansAfterActivatingScreen extends StatelessWidget {
+class MyPlansAfterActivatingScreen extends StatefulWidget {
+  @override
+  State<MyPlansAfterActivatingScreen> createState() => _MyPlansAfterActivatingScreenState();
+}
+
+class _MyPlansAfterActivatingScreenState extends State<MyPlansAfterActivatingScreen> {
+  List<Msg> allSubscriptionList = [];
+
+  @override
+  void initState() {
+   getAllSubscriptionPlans();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -43,9 +57,10 @@ class MyPlansAfterActivatingScreen extends StatelessWidget {
                                     return SizedBox(
                                         height: getVerticalSize(38));
                                   },
-                                  itemCount: 3,
+                                  itemCount: allSubscriptionList.length,
                                   itemBuilder: (context, index) {
                                     return ListsilverplanItemWidget(
+                                        allSubscriptionList[index],
                                         onTapStacksilverplan: () {
                                       onTapStacksilverplan(context);
                                     });
@@ -55,5 +70,16 @@ class MyPlansAfterActivatingScreen extends StatelessWidget {
 
   onTapStacksilverplan(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.afterActivatingScreen);
+  }
+
+  void getAllSubscriptionPlans() async {
+    final authRepository = AuthRepository();
+    final response = await authRepository.getAllSubscriptionPlan();
+    debugPrint(response.toString());
+    GetAllSubscriptionPlan getALlSubscriptionPlans = GetAllSubscriptionPlan.fromJson(response);
+    setState(() {
+      allSubscriptionList = getALlSubscriptionPlans.msg!;
+      print(getALlSubscriptionPlans.msg);
+    });
   }
 }

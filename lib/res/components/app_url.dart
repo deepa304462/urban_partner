@@ -29,4 +29,10 @@ class AppUrl {
   static var newOrdersUrl = baseUrl+"api/v1/cartAndOrder/all/new/order";
 
   static var supportUrl = baseUrl+"api/v1/support";
+
+  static var editServiceAreaUrl = baseUrl+"api/v1/serviceArea/";
+
+  static var editServiceDistanceAreaUrl = baseUrl+"api/v1/serviceableDist/";
+
+  static var getAllSubscriptionPlanUrl = baseUrl+"api/v1/subscriptionn";
 }

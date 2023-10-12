@@ -1,12 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
+import 'package:urban_partner/core/utils/utils.dart';
+import 'package:urban_partner/models/get_service_area_model.dart';
+import 'package:urban_partner/models/get_service_distance_model.dart'
+    as service;
 import 'package:urban_partner/presentation/profile_screen/profile_screen.dart';
+import 'package:urban_partner/repository/auth_repository.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_image.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_subtitle_1.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 
-class EditEorkingAreaScreen extends StatelessWidget {
+class EditEorkingAreaScreen extends StatefulWidget {
+  @override
+  State<EditEorkingAreaScreen> createState() => _EditEorkingAreaScreenState();
+}
+
+class _EditEorkingAreaScreenState extends State<EditEorkingAreaScreen> {
+  List<service.Msg> serviceDistanceList = [];
+  List<Msg> serviceAreaList = [];
+  Msg? selectArea;
+  service.Msg? selectDistance;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    serviceArea();
+    serviceDistance();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -39,9 +62,11 @@ class EditEorkingAreaScreen extends StatelessWidget {
                   width: getHorizontalSize(
                     25,
                   ),
-                  onTap: (){
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context)=>ProfileScreen()));
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProfileScreen()));
                   },
                   svgPath: ImageConstant.imgGroup295,
                   margin: getMargin(
@@ -163,43 +188,52 @@ class EditEorkingAreaScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                width: getHorizontalSize(
-                  358,
-                ),
-                margin: getMargin(
-                  left: 16,
-                  top: 6,
-                  right: 16,
-                ),
-                padding: getPadding(
-                  left: 13,
-                  top: 17,
-                  right: 13,
-                  bottom: 17,
-                ),
-                decoration: AppDecoration.outlineBluegray100.copyWith(
-                  borderRadius: BorderRadiusStyle.roundedBorder8,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomImageView(
-                      svgPath: ImageConstant.imgVectorBlack9005x10,
-                      height: getVerticalSize(
-                        5,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Colors.grey.shade300, width: 1),
+                        borderRadius: BorderRadius.circular(8)),
+                    child: DropdownButtonFormField<Msg>(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.all(8),
+                        suffixIcon: CustomImageView(
+                            svgPath: ImageConstant.imgVectorBlack9005x10,
+                            height: getVerticalSize(30),
+                            width: getHorizontalSize(10),
+                            margin: getMargin(
+                                top: 6, bottom: 6, left: 30, right: 16)),
+                        hintText: 'Select Area',
+                        hintStyle: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
                       ),
-                      width: getHorizontalSize(
-                        10,
-                      ),
-                      margin: getMargin(
-                        top: 1,
-                      ),
-                    ),
-                  ],
-                ),
+                      value: selectArea,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Inter',
+                          fontSize: 14),
+                      iconSize: 0,
+                      elevation: 16,
+                      onChanged: (Msg? newValue) {
+                        setState(() {
+                          selectArea = newValue;
+                          // Navigator.push(context, MaterialPageRoute(builder: (_)=>PincodeScreen()));
+                        });
+                      },
+                      items: serviceAreaList
+                          .map<DropdownMenuItem<Msg>>((Msg value) {
+                        return DropdownMenuItem<Msg>(
+                          value: value,
+                          child: Text(value.name.toString() ?? ''),
+                        );
+                      }).toList(),
+                    )),
               ),
               Align(
                 alignment: Alignment.centerLeft,
@@ -216,54 +250,64 @@ class EditEorkingAreaScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Container(
-                width: getHorizontalSize(
-                  358,
-                ),
-                margin: getMargin(
-                  left: 16,
-                  top: 6,
-                  right: 16,
-                ),
-                padding: getPadding(
-                  left: 13,
-                  top: 17,
-                  right: 13,
-                  bottom: 17,
-                ),
-                decoration: AppDecoration.outlineBluegray100.copyWith(
-                  borderRadius: BorderRadiusStyle.roundedBorder8,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomImageView(
-                      svgPath: ImageConstant.imgVectorBlack9005x10,
-                      height: getVerticalSize(
-                        5,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: Colors.grey.shade300, width: 1),
+                        borderRadius: BorderRadius.circular(8)),
+                    child: DropdownButtonFormField<service.Msg>(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.all(8),
+                        suffixIcon: CustomImageView(
+                            svgPath: ImageConstant.imgVectorBlack9005x10,
+                            height: getVerticalSize(30),
+                            width: getHorizontalSize(10),
+                            margin: getMargin(
+                                top: 6, bottom: 6, left: 30, right: 16)),
+                        hintText: 'Select Distance',
+                        hintStyle: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
                       ),
-                      width: getHorizontalSize(
-                        10,
-                      ),
-                      margin: getMargin(
-                        top: 1,
-                      ),
-                    ),
-                  ],
-                ),
+                      value: selectDistance,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Inter',
+                          fontSize: 14),
+                      iconSize: 0,
+                      elevation: 16,
+                      onChanged: (service.Msg? newValue) {
+                        setState(() {
+                          selectDistance = newValue;
+                          // Navigator.push(context, MaterialPageRoute(builder: (_)=>PincodeScreen()));
+                        });
+                      },
+                      items: serviceDistanceList
+                          .map<DropdownMenuItem<service.Msg>>(
+                              (service.Msg value) {
+                        return DropdownMenuItem<service.Msg>(
+                          value: value,
+                          child: Text(value.value.toString() ?? ''),
+                        );
+                      }).toList(),
+                    )),
               ),
               Spacer(),
-              CustomButton(
-                onTap: (){
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context)=>ProfileScreen()));
+              _isLoading ?CircularProgressIndicator():CustomButton(
+                onTap: () {
+                  editServiceArea();
+                  editServiceDistance();
                 },
                 width: getHorizontalSize(
                   195,
                 ),
-                text: "Save",
+                text: "Update",
                 margin: getMargin(
                   bottom: 61,
                 ),
@@ -276,5 +320,84 @@ class EditEorkingAreaScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  editServiceArea() async {
+    setState(() {
+      _isLoading = true;
+    });
+    Map<String, String> data = {'name': selectArea!.name!};
+    final authRepository = AuthRepository();
+    final response =
+        await authRepository.editWorkingArea(data, selectArea!.id.toString());
+    print("object");
+    print(response.body);
+    print("object");
+
+    if (response.statusCode == 200){
+      Utils.toastMassage("Area updated Successfully");
+      setState(() {
+        _isLoading = false;
+      });
+
+    }else {
+      Utils.toastMassage("Area not Successfully");
+      setState(() {
+        _isLoading = false;
+      });
+
+    }
+  }
+  editServiceDistance() async {
+    setState(() {
+      _isLoading = true;
+    });
+    Map<String, String> data = {'value': selectDistance!.value!,'type': 'km'!};
+    final authRepository = AuthRepository();
+    final response =
+    await authRepository.editServiceDistanceArea(data, selectDistance!.id.toString());
+    print(selectDistance!.id);
+    print("object");
+    print(response.body);
+    print("object");
+    if (response.statusCode == 200){
+      Utils.toastMassage("Area updated Successfully");
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => ProfileScreen()));
+    }else {
+      Utils.toastMassage("Area not Successfully");
+      setState(() {
+        _isLoading = false;
+      });
+
+    }
+  }
+
+  void serviceArea() async {
+    final authRepository = AuthRepository();
+    final response = await authRepository.serviceAreaApi();
+
+    GetServiceAreaModel getServiceAreaModel =
+        GetServiceAreaModel.fromJson(response);
+    setState(() {
+      serviceAreaList = getServiceAreaModel.msg!;
+      print(serviceAreaList.length);
+    });
+  }
+
+  void serviceDistance() async {
+    final authRepository = AuthRepository();
+    final response = await authRepository.serviceDistanceAreaApi();
+
+    service.GetServiceDistanceModel getServiceDistanceModel =
+        service.GetServiceDistanceModel.fromJson(response);
+
+    setState(() {
+      serviceDistanceList = getServiceDistanceModel.msg!;
+      print(serviceDistanceList.length);
+    });
   }
 }

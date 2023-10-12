@@ -134,10 +134,10 @@ class NetworkApiServices extends BaseApiServices {
       Map<String, String> header = {"Authorization": 'Bearer $token'};
       http.Response response = await http
           .post(
-        Uri.parse(url),
-        headers: header,
-        body: data,
-      )
+            Uri.parse(url),
+            headers: header,
+            body: data,
+          )
           .timeout(const Duration(seconds: 10));
       responseJson = jsonDecode(response.body);
     } on SocketException {
@@ -145,4 +145,17 @@ class NetworkApiServices extends BaseApiServices {
     }
     return responseJson;
   }
+
+  Future<http.Response> updateServiceArea(String url, dynamic data) async {
+    try {
+      final http.Response response = await http.put(
+        Uri.parse(url),
+        body: data,
+      ).timeout(const Duration(seconds: 10));
+      return response;
+    } on SocketException {
+      throw FetchDataException('No internet connection');
+    }
+  }
+
 }

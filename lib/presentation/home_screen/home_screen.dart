@@ -460,74 +460,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-            elevation: 0,
-            backgroundColor: Colors.white,
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: Colors.blue.shade900,
-            selectedLabelStyle: TextStyle(
-              fontFamily: 'inter',
-            ),
-            currentIndex: _currentIndex,
-            onTap: _onTabTapped,
-            items: [
-              BottomNavigationBarItem(
-                activeIcon: CircleAvatar(
-                  backgroundColor: Colors.blue.shade900,
-                  child: CustomImageView(svgPath: ImageConstant.imgFrame),
-                ),
-                icon: CircleAvatar(
-                  backgroundColor: Colors.grey.shade600,
-                  child: CustomImageView(svgPath: ImageConstant.imgFrame),
-                ),
-                label: 'New Job',
-              ),
-              BottomNavigationBarItem(
-                activeIcon: CircleAvatar(
-                  backgroundColor: Colors.blue.shade900,
-                  child: CustomImageView(svgPath: ImageConstant.imgRefresh),
-                ),
-                icon: CircleAvatar(
-                  backgroundColor: Colors.grey.shade600,
-                  child: CustomImageView(svgPath: ImageConstant.imgRefresh),
-                ),
-                label: 'Ongoing',
-              ),
-              BottomNavigationBarItem(
-                  activeIcon: CircleAvatar(
-                    backgroundColor: Colors.blue.shade900,
-                    child: CustomImageView(svgPath: ImageConstant.imgCheckmark),
-                  ),
-                  icon: CircleAvatar(
-                    backgroundColor: Colors.grey.shade600,
-                    child: CustomImageView(svgPath: ImageConstant.imgCheckmark),
-                  ),
-                  label: 'RAC Around'),
-              BottomNavigationBarItem(
-                  activeIcon: CircleAvatar(
-                    backgroundColor: Colors.blue.shade900,
-                    child: CustomImageView(
-                        svgPath: ImageConstant.imgFrameWhiteA700),
-                  ),
-                  icon: CircleAvatar(
-                    backgroundColor: Colors.grey.shade600,
-                    child: CustomImageView(
-                        svgPath: ImageConstant.imgFrameWhiteA700),
-                  ),
-                  label: 'Shopping'),
-              BottomNavigationBarItem(
-                  activeIcon: CircleAvatar(
-                    backgroundColor: Colors.blue.shade900,
-                    child: CustomImageView(
-                        svgPath: ImageConstant.imgFrameWhiteA70040x40),
-                  ),
-                  icon: CircleAvatar(
-                    backgroundColor: Colors.grey.shade600,
-                    child: CustomImageView(
-                        svgPath: ImageConstant.imgFrameWhiteA70040x40),
-                  ),
-                  label: 'Profile')
-            ]),
       ),
     );
   }
@@ -570,14 +502,6 @@ class _HomeScreenState extends State<HomeScreen> {
     print("response");
     print(response);
     print("response");
-    await Utils.saveToSharedPreference(
-        Constants.name, getProfileModel!.data!.fullName);
-    await Utils.saveToSharedPreference(
-        Constants.email, getProfileModel!.data!.email);
-    await Utils.saveToSharedPreference(
-        Constants.mobile, getProfileModel!.data!.phone);
-    await Utils.saveToSharedPreference(
-        Constants.profilePhoto, getProfileModel!.data!.phone);
     setState(() {});
   }
 

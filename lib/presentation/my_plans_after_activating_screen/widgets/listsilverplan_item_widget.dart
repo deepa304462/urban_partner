@@ -2,17 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 
+import '../../../models/get_all_subscription_plan.dart';
+import '../../../repository/auth_repository.dart';
+
 // ignore: must_be_immutable
-class ListsilverplanItemWidget extends StatelessWidget {
-  ListsilverplanItemWidget({this.onTapStacksilverplan});
+class ListsilverplanItemWidget extends StatefulWidget {
+  ListsilverplanItemWidget(this.allSubscriptionList, {this.onTapStacksilverplan});
 
   VoidCallback? onTapStacksilverplan;
+  Msg allSubscriptionList;
+
+  @override
+  State<ListsilverplanItemWidget> createState() =>
+      _ListsilverplanItemWidgetState();
+}
+
+
+class _ListsilverplanItemWidgetState extends State<ListsilverplanItemWidget> {
+
+
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        onTapStacksilverplan?.call();
+        widget.onTapStacksilverplan?.call();
       },
       child: Card(
         clipBehavior: Clip.antiAlias,
@@ -51,6 +65,7 @@ class ListsilverplanItemWidget extends StatelessWidget {
                 child: Padding(
                   padding: getPadding(
                     left: 2,
+
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -58,7 +73,7 @@ class ListsilverplanItemWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        "Silver Plan",
+                        widget.allSubscriptionList.planName.toString(),
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.left,
                         style: AppStyle.txtInriaSansBold20,
@@ -98,11 +113,21 @@ class ListsilverplanItemWidget extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(
-                                "₹1500.0",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.left,
-                                style: AppStyle.txtInriaSansBold20Black900,
+                              Row(
+                                children: [
+                                  Text(
+                                    widget.allSubscriptionList.amount.toString(),
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                    style: AppStyle.txtInriaSansBold20Black900,
+                                  ),
+                                  Text(
+                                    "/-",
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                    style: AppStyle.txtInriaSansBold20Black900,
+                                  ),
+                                ],
                               ),
                               Container(
                                 height: getVerticalSize(
@@ -124,7 +149,7 @@ class ListsilverplanItemWidget extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.left,
                                         style:
-                                            AppStyle.txtInriaSansBold20Black900,
+                                        AppStyle.txtInriaSansBold20Black900,
                                       ),
                                     ),
                                     Align(
@@ -180,7 +205,9 @@ class ListsilverplanItemWidget extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
+      ));
+
+
   }
+
 }

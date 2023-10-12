@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
+import 'package:urban_partner/core/utils/utils.dart';
 import 'package:urban_partner/models/get_all_services_model.dart' as allService;
 import 'package:urban_partner/models/get_service_area_model.dart';
 import 'package:urban_partner/models/get_service_distance_model.dart'
@@ -340,7 +341,6 @@ class _WorkProfileTwoPageState extends State<WorkProfileTwoPage>
       'serviceDistance': selectDistance!.id,
       'serviceName':selectService!.id,
     };
-
     File? pic, panCard, adharFront, adharBack;
     final response = await authRepository.updateAndUploadDocument(
       data,

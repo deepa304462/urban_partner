@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/core/utils/utils.dart';
 
@@ -113,6 +114,26 @@ class AuthRepository {
     }
   }
 
+  Future<Response> editWorkingArea(dynamic data, String serviceAreaId) async {
+    try {
+      final response = await _apiServices.updateServiceArea(
+          AppUrl.editServiceAreaUrl + serviceAreaId, data);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<Response> editServiceDistanceArea(dynamic data, String serviceDistanceAreaId) async {
+    try {
+      final response = await _apiServices.updateServiceArea(
+          AppUrl.editServiceDistanceAreaUrl + serviceDistanceAreaId, data);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future<dynamic> getProfileApi() async {
     try {
       dynamic response =
@@ -146,7 +167,8 @@ class AuthRepository {
 
   Future<dynamic> getNewOrdersApi() async {
     try {
-      dynamic response = await _apiServices.getGetApiResponse(AppUrl.newOrdersUrl);
+      dynamic response =
+          await _apiServices.getGetApiResponse(AppUrl.newOrdersUrl);
       return response;
     } catch (e) {
       throw e;
@@ -156,11 +178,19 @@ class AuthRepository {
   Future<dynamic> createSupportApi(dynamic data) async {
     try {
       dynamic response =
-      await _apiServices.getPostApiResponseHeaders(AppUrl.supportUrl, data);
+          await _apiServices.getPostApiResponseHeaders(AppUrl.supportUrl, data);
       return response;
     } catch (e) {
       throw e;
     }
   }
 
+  Future<dynamic> getAllSubscriptionPlan() async {
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(AppUrl.getAllSubscriptionPlanUrl);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
