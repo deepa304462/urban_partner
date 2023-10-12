@@ -118,39 +118,29 @@ class _OngoingPressScreenState extends State<OngoingPressScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              height: getVerticalSize(34),
-                              width: getHorizontalSize(118),
+                              height: 35,
+                              width: 130,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xFF094DB3), // Blue color at 100%
-                                    Color(0xFF09B3B3), // Teal color at 47%
-                                  ],
-                                  stops: [-2.0, 0.5],
-                                  begin: FractionalOffset.topCenter,
-                                  end: FractionalOffset.bottomCenter,
-                                ),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.transparent,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(
+                                          0xFF094DB3), // Blue color at 100%
+                                      Color(
+                                          0xFF09B3B3), // Teal color at 47%
+                                    ],
+                                    stops: [-2.0, 0.5],
+                                    begin: FractionalOffset.topCenter,
+                                    end:
+                                    FractionalOffset.bottomCenter,
                                   ),
-                                ),
-                                child: Text(
-                                  "Go To",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                  borderRadius: BorderRadius.circular(5)
                               ),
+                              child:
+                              Center(child: Text("Go To", style: TextStyle(
+                                color: Colors.white, // Change text color to make it visible on the gradient background
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Inter",
+                              ),)),
                             ),
                             ElevatedButton(
                               style: ButtonStyle(

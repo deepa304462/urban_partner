@@ -3,6 +3,7 @@ import 'package:another_flushbar/flushbar_route.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:urban_partner/presentation/home_screen/home_screen.dart';
 import 'package:urban_partner/presentation/sign_up_page/sign_up.dart';
 import 'package:urban_partner/presentation/splash_screen/splash_screen.dart';
 
@@ -112,4 +113,35 @@ class Utils {
     Navigator.pushAndRemoveUntil(context,
         MaterialPageRoute(builder: (_) => routeName), (route) => false);
   }
+
+  static Future<void> showCustomAlertDialog(
+      BuildContext context, String title, String message) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: <Widget>[
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                    Colors.blueAccent.shade700
+                  )
+                ),
+                onPressed: () {
+               Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>HomeScreen()));
+        },
+                child: const Text('Dismiss'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 }

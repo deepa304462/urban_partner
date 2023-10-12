@@ -124,4 +124,25 @@ class NetworkApiServices extends BaseApiServices {
                 response.statusCode.toString());
     }
   }
+
+  @override
+  Future getPostApiResponseHeaders(String url, data) async {
+    dynamic responseJson;
+
+    try {
+      String token = await Utils.getFromSharedPreference(Constants.accessToken);
+      Map<String, String> header = {"Authorization": 'Bearer $token'};
+      http.Response response = await http
+          .post(
+        Uri.parse(url),
+        headers: header,
+        body: data,
+      )
+          .timeout(const Duration(seconds: 10));
+      responseJson = jsonDecode(response.body);
+    } on SocketException {
+      throw FetchDataException('No internet connection');
+    }
+    return responseJson;
+  }
 }

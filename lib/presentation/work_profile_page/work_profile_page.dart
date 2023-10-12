@@ -97,8 +97,12 @@ class _WorkProfilePageState extends State<WorkProfilePage>
                                                       color:
                                                           Colors.grey.shade400),
                                                 )
-                                              : Image.file(pic!,
-                                                  fit: BoxFit.contain),
+                                              : Container(
+                                            height: 100,
+                                                width: 100,
+                                                child: Image.file(pic!,
+                                                    fit: BoxFit.cover,width: 150,height: 150,),
+                                              ),
                                         ),
                                       ),
                                     ),

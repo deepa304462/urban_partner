@@ -40,16 +40,18 @@ class _RacAroundScreenState extends State<RacAroundScreen> {
             text: "RAC Around",
           ),
         ),
-        body:GoogleMap(
-
-          initialCameraPosition: CameraPosition(
-            target: _initialPosition,
-            zoom: 15.0,
-          ),
-          onMapCreated: (GoogleMapController controller) {
-            mapController = controller;
-          },
-        ),
+         body:Image.asset("assets/images/img_images51.png")
+        
+        // GoogleMap(
+        //
+        //   initialCameraPosition: CameraPosition(
+        //     target: _initialPosition,
+        //     zoom: 15.0,
+        //   ),
+        //   onMapCreated: (GoogleMapController controller) {
+        //     mapController = controller;
+        //   },
+        // ),
       ),
     );
   }

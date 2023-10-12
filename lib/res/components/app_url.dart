@@ -23,4 +23,10 @@ class AppUrl {
   static var getProfile = baseUrl+"/api/v1/vendor/getProfileVendor";
 
   static var onGoingServices = baseUrl+"api/v1/cartAndOrder/ongoing/job/";
+
+  static var resrendOtpUrl = baseUrl+"api/v1/user/resendOtp/";
+
+  static var newOrdersUrl = baseUrl+"api/v1/cartAndOrder/all/new/order";
+
+  static var supportUrl = baseUrl+"api/v1/support";
 }

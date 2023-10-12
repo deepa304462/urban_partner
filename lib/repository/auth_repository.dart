@@ -53,7 +53,7 @@ class AuthRepository {
   Future<dynamic> createAddressApi(dynamic data) async {
     try {
       dynamic response =
-      await _apiServices.getPostApiResponse(AppUrl.createAddress, data);
+          await _apiServices.getPostApiResponse(AppUrl.createAddress, data);
       return response;
     } catch (e) {
       throw e;
@@ -115,7 +115,8 @@ class AuthRepository {
 
   Future<dynamic> getProfileApi() async {
     try {
-      dynamic response = await _apiServices.getGetApiResponse(AppUrl.getProfile);
+      dynamic response =
+          await _apiServices.getGetApiResponse(AppUrl.getProfile);
       return response;
     } catch (e) {
       throw e;
@@ -125,7 +126,37 @@ class AuthRepository {
   Future<dynamic> onGoingService() async {
     try {
       String userId = await Utils.getFromSharedPreference(Constants.userId);
-      dynamic response = await _apiServices.getGetApiResponse(AppUrl.onGoingServices+userId);
+      dynamic response =
+          await _apiServices.getGetApiResponse(AppUrl.onGoingServices + userId);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<dynamic> resendOtp(String OtpId) async {
+    try {
+      dynamic response = await _apiServices
+          .getPostApiResponse(AppUrl.resrendOtpUrl + OtpId, {});
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<dynamic> getNewOrdersApi() async {
+    try {
+      dynamic response = await _apiServices.getGetApiResponse(AppUrl.newOrdersUrl);
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<dynamic> createSupportApi(dynamic data) async {
+    try {
+      dynamic response =
+      await _apiServices.getPostApiResponseHeaders(AppUrl.supportUrl, data);
       return response;
     } catch (e) {
       throw e;

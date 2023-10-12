@@ -8,6 +8,8 @@ import 'package:urban_partner/widgets/app_bar/appbar_iconbutton.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 
+import '../../models/get_profile_model.dart';
+import '../../repository/auth_repository.dart';
 import '../edit_profile_four_tab_container_screen/edit_profile_four_tab_container_screen.dart';
 
 class Iphone14TwentysevenTabContainerScreen extends StatefulWidget {
@@ -24,9 +26,11 @@ class _Iphone14TwentysevenTabContainerScreenState
     extends State<Iphone14TwentysevenTabContainerScreen>
     with TickerProviderStateMixin {
   late TabController tabviewController;
+  GetProfileModel getProfileModel = GetProfileModel();
 
   @override
   void initState() {
+    getProfileData();
     super.initState();
     tabviewController = TabController(length: 3, vsync: this);
   }
@@ -46,9 +50,16 @@ class _Iphone14TwentysevenTabContainerScreenState
                       onTapGroup295(context);
                     }),
                 centerTitle: true,
-                title: AppbarCircleimage(
-                    imagePath: ImageConstant.imgEllipse405,
-                    margin: getMargin(top: 26)),
+                title:Container(
+                  height: 100,
+                  width: 100,
+                  child: getProfileModel.data == null ?Icon(Icons.person):CircleAvatar(
+                    backgroundColor: Colors.transparent,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Container(
+                              child: Image.network(getProfileModel.data!.uploadSelfie!,height: 250,width: 250,fit: BoxFit.cover,)))),
+                ),
                 actions: [
                   CustomButton(
                     onTap: (){
@@ -110,5 +121,14 @@ class _Iphone14TwentysevenTabContainerScreenState
 
   onTapGroup295(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.profileScreen);
+  }
+
+  getProfileData() async {
+    final authRepository = AuthRepository();
+    final response  = await authRepository.getProfileApi();
+    getProfileModel = GetProfileModel.fromJson(response);
+    setState(() {
+
+    });
   }
 }

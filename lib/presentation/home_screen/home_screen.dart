@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:urban_partner/common/common.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/models/get_profile_model.dart';
+import 'package:urban_partner/models/new_order_model.dart';
 import 'package:urban_partner/presentation/ongoing_press_screen/ongoing_press_screen.dart';
 import 'package:urban_partner/presentation/profile_screen/profile_screen.dart';
 import 'package:urban_partner/presentation/rac_around_screen/rac_around_screen.dart';
 import 'package:urban_partner/presentation/shopping_panel_screen/shopping_panel_screen.dart';
-import 'package:urban_partner/widgets/custom_button.dart';
 
+import '../../core/utils/utils.dart';
 import '../../repository/auth_repository.dart';
-import '../home_screen/widgets/listservice_item_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,12 +17,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  GetProfileModel getProfileModel = GetProfileModel();
+  GetProfileModel? getProfileModel;
+  NewOrderModel newOrderModel = NewOrderModel();
   int _currentIndex = 0;
 
   @override
   void initState() {
     getProfileData();
+    getNewOrder();
     super.initState();
   }
 
@@ -30,530 +33,501 @@ class _HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorConstant.whiteA700,
-        body: Container(
-          width: double.maxFinite,
-          child: getProfileModel.data == null
+        // appBar: AppBar(
+        //   toolbarHeight: 30,
+        //   backgroundColor: Color(0xffFAA708),
+        // ),
+        body: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: getProfileModel == null
               ? Center(child: CircularProgressIndicator())
-              : Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: getPadding(bottom: 196),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                  height: getVerticalSize(162),
-                                  // width: double.maxFinite,
-                                  padding: getPadding(
-                                      left: 7, top: 6, right: 7, bottom: 6),
-                                  decoration: AppDecoration.fillWhiteA7007f,
-                                  child: Stack(
-                                      alignment: Alignment.bottomRight,
+              : Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 100,
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Container(
+                                  height: 80,
+                                  width: 80,
+                                  child: CircleAvatar(
+                                      backgroundColor: Colors.transparent,
+                                      child: Image.network(
+                                        getProfileModel!.data!.uploadSelfie
+                                            .toString(),
+                                        height: 150,
+                                        width: 150,
+                                        fit: BoxFit.cover,
+                                      )),
+                                )),
+
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    getProfileModel!.data!.fullName.toString(),
+                                    style: TextStyle(fontFamily: "Inter"),
+                                  ),
+                                  Text(
+                                    getProfileModel!.data!.address.toString(),
+                                    style: TextStyle(fontFamily: "Inter"),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        color: Colors.orangeAccent,
+                                        size: 20,
+                                      ),
+                                      Text(
+                                        "Rating",
+                                        style: TextStyle(fontFamily: "Inter"),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "Lead Wallet",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "Inter"),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "RAC Wallet",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "Inter"),
+                                  )
+                                ],
+                              ),
+                            ),
+                            // SizedBox(
+                            //   width: 10,
+                            // ),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  ElevatedButton(
+                                      style: ButtonStyle(
+                                          shape: MaterialStatePropertyAll(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                          ),
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Color(0xff145F51))),
+                                      onPressed: () {},
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                              getProfileModel!.data!.lead
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontFamily: "Inter")),
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          Text("Leads",
+                                              style: TextStyle(
+                                                  fontFamily: "Inter"))
+                                        ],
+                                      )),
+                                  ElevatedButton(
+                                      style: ButtonStyle(
+                                          shape: MaterialStatePropertyAll(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30)),
+                                          ),
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Color(0xff482FFF))),
+                                      onPressed: () {},
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.currency_rupee),
+                                          Text(
+                                              getProfileModel!.data!.wallet
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontFamily: "Inter"))
+                                        ],
+                                      ))
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                              style: ButtonStyle(
+                                shape: MaterialStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30)),
+                                ),
+                                backgroundColor:
+                                    MaterialStatePropertyAll(Color(0xff63FFB1)),
+                              ),
+                              onPressed: () {},
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Text("Total Earned:",
+                                        style: TextStyle(
+                                            fontFamily: "Inter",
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold)),
+                                    Row(
                                       children: [
-                                        CustomImageView(
-                                            imagePath:
-                                                ImageConstant.imgEllipse136,
-                                            height: getVerticalSize(74),
-                                            width: getHorizontalSize(71),
-                                            radius: BorderRadius.circular(
-                                                getHorizontalSize(37)),
-                                            alignment: Alignment.topLeft,
-                                            margin: getMargin(left: 9)),
-                                        Align(
-                                            alignment: Alignment.bottomRight,
-                                            child: Padding(
-                                                padding: getPadding(bottom: 1),
-                                                child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Align(
-                                                          alignment: Alignment
-                                                              .centerRight,
-                                                          child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .end,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Padding(
-                                                                    padding: getPadding(
-                                                                        top: 5,
-                                                                        bottom:
-                                                                            5),
-                                                                    child: Text(
-                                                                        "RAC Wallet",
-                                                                        overflow:
-                                                                            TextOverflow
-                                                                                .ellipsis,
-                                                                        textAlign:
-                                                                            TextAlign
-                                                                                .left,
-                                                                        style: AppStyle
-                                                                            .txtRobotoRomanBold12)),
-                                                                CustomButton(
-                                                                    height:
-                                                                        getVerticalSize(
-                                                                            26),
-                                                                    width:
-                                                                        getHorizontalSize(
-                                                                            70),
-                                                                    text: getProfileModel
-                                                                        .data!
-                                                                        .wallet
-                                                                        .toString(),
-                                                                    margin: getMargin(
-                                                                        left:
-                                                                            8),
-                                                                    variant: ButtonVariant
-                                                                        .FillDeeppurpleA200,
-                                                                    shape: ButtonShape
-                                                                        .CircleBorder13,
-                                                                    padding: ButtonPadding
-                                                                        .PaddingT5,
-                                                                    fontStyle:
-                                                                        ButtonFontStyle
-                                                                            .RobotoRomanBold12,
-                                                                    prefixWidget: Container(
-                                                                        margin: getMargin(
-                                                                            right:
-                                                                                2),
-                                                                        decoration: BoxDecoration(
-                                                                            color: ColorConstant
-                                                                                .whiteA700),
-                                                                        child: CustomImageView(
-                                                                            svgPath:
-                                                                                ImageConstant.imgVector)))
-                                                              ])),
-                                                      Padding(
-                                                          padding: getPadding(
-                                                              top: 15),
-                                                          child: Row(children: [
-                                                            Container(
-                                                                height:
-                                                                    getVerticalSize(
-                                                                        40),
-                                                                width:
-                                                                    getHorizontalSize(
-                                                                        80),
-                                                                decoration:
-                                                                    AppDecoration
-                                                                        .outlineBlack9003f1,
-                                                                child: Stack(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .bottomCenter,
-                                                                    children: [
-                                                                      Align(
-                                                                          alignment:
-                                                                              Alignment.center,
-                                                                          child: Card(
-                                                                              clipBehavior: Clip.antiAlias,
-                                                                              elevation: 0,
-                                                                              margin: EdgeInsets.all(0),
-                                                                              shape: RoundedRectangleBorder(borderRadius: BorderRadiusStyle.roundedBorder2),
-                                                                              child: Container(
-                                                                                  height: getVerticalSize(40),
-                                                                                  width: getHorizontalSize(80),
-                                                                                  decoration: AppDecoration.gradientOrange700YellowA400.copyWith(borderRadius: BorderRadiusStyle.roundedBorder2),
-                                                                                  child: Stack(children: [
-                                                                                    CustomImageView(imagePath: ImageConstant.imgGroup15, height: getVerticalSize(40), width: getHorizontalSize(80), radius: BorderRadius.circular(getHorizontalSize(2)), alignment: Alignment.center)
-                                                                                  ])))),
-                                                                      Align(
-                                                                          alignment:
-                                                                              Alignment.bottomCenter,
-                                                                          child: Padding(
-                                                                              padding: getPadding(bottom: 1),
-                                                                              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                                                                Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: [
-                                                                                  Text("Silver Plan", overflow: TextOverflow.ellipsis, textAlign: TextAlign.left, style: AppStyle.txtInriaSansBold47),
-                                                                                  Text("Benefits", overflow: TextOverflow.ellipsis, textAlign: TextAlign.left, style: AppStyle.txtInriaSansRegular376),
-                                                                                  Container(width: getHorizontalSize(34), margin: getMargin(left: 2), child: Text("2 Free T-Shirt\nPer lead cost 100 Rs\nNo charge on per job\n1 year validity", maxLines: null, textAlign: TextAlign.left, style: AppStyle.txtInriaSansRegular376)),
-                                                                                  Align(alignment: Alignment.centerRight, child: Text("₹1500.0", overflow: TextOverflow.ellipsis, textAlign: TextAlign.left, style: AppStyle.txtInriaSansBold47Black900))
-                                                                                ]),
-                                                                                Padding(padding: getPadding(left: 3, top: 29), child: Text("₹2500.0", overflow: TextOverflow.ellipsis, textAlign: TextAlign.left, style: AppStyle.txtInriaSansBold47Black900))
-                                                                              ])))
-                                                                    ])),
-                                                            CustomImageView(
-                                                                svgPath:
-                                                                    ImageConstant
-                                                                        .imgComputer,
-                                                                height:
-                                                                    getVerticalSize(
-                                                                        20),
-                                                                width:
-                                                                    getHorizontalSize(
-                                                                        19),
-                                                                margin:
-                                                                    getMargin(
-                                                                        left:
-                                                                            28,
-                                                                        top: 12,
-                                                                        bottom:
-                                                                            8)),
-                                                            CustomImageView(
-                                                                svgPath:
-                                                                    ImageConstant
-                                                                        .imgPhshoppingcartfill,
-                                                                height:
-                                                                    getSize(24),
-                                                                width:
-                                                                    getSize(24),
-                                                                margin:
-                                                                    getMargin(
-                                                                        left:
-                                                                            16,
-                                                                        top: 8,
-                                                                        bottom:
-                                                                            8))
-                                                          ])),
-                                                      Padding(
-                                                          padding: getPadding(
-                                                              left: 27, top: 3),
-                                                          child: Text("Gold",
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style: AppStyle
-                                                                  .txtMulishRomanBlack13))
-                                                    ]))),
-                                        Align(
-                                            alignment: Alignment.topRight,
-                                            child: Padding(
-                                                padding: getPadding(top: 13),
-                                                child: Row(
+                                        Text("Rs.",
+                                            style: TextStyle(
+                                                fontFamily: "Inter",
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold)),
+                                        Text("10000",
+                                            style: TextStyle(
+                                                fontFamily: "Inter",
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold))
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              )),
+                          SizedBox(
+                            width: 40,
+                          ),
+                          Column(
+                            children: [
+                              Image.asset("assets/images/Group 37697.png"),
+                              Text("Gold",
+                                  style: TextStyle(
+                                      fontFamily: "Inter",
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.notifications_active,
+                              color: Colors.orangeAccent,
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.add_shopping_cart,
+                                color: Colors.orangeAccent,
+                              ))
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(newOrderModel.count.toString(),
+                                  style: TextStyle(
+                                      fontFamily: "Inter",
+                                      fontWeight: FontWeight.bold)),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text("New Jobs",
+                                  style: TextStyle(
+                                      fontFamily: "Inter",
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          TextButton(
+                              onPressed: () {},
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Missed Jobs",
+                                    style: TextStyle(
+                                      fontFamily: "Inter",
+                                      color: Color(0xff0B37A3),
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ],
+                              ))
+                        ],
+                      ),
+                      newOrderModel == null
+                          ? CircularProgressIndicator()
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: newOrderModel.data!.length,
+                              itemBuilder: (context, index) {
+                                final order = newOrderModel.data![index];
+                                return ListTile(
+                                    title: Card(
+                                        elevation: 4,
+                                        color: Colors.grey.shade200,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        shadowColor: Colors.black,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    "Service",
+                                                    style: TextStyle(
+                                                        fontFamily: "Inter"),
+                                                  ),
+                                                  Text(
+                                                    'Time Slot',
+                                                    style: TextStyle(
+                                                        fontFamily: "Inter"),
+                                                  )
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                    order.serviceId!.name
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily: "Inter"),
+                                                  ),
+                                                  Text(
+                                                    order.address!.timeSlot
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily: "Inter"),
+                                                  )
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 40),
+                                                    child: Text(
+                                                      "Price",
+                                                      style: TextStyle(
+                                                          fontFamily: "Inter"),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 140,
+                                                  ),
+                                                  Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.end,
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
+                                                        CrossAxisAlignment.end,
                                                     children: [
-                                                      Padding(
-                                                          padding: getPadding(
-                                                              top: 8,
-                                                              bottom: 2),
-                                                          child: Text(
-                                                              getProfileModel
-                                                                      .data!
-                                                                      .fullName ??
-                                                                  "",
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style: AppStyle
-                                                                  .txtInterBold12
-                                                                  .copyWith(
-                                                                      letterSpacing:
-                                                                          getHorizontalSize(
-                                                                              0.36)))),
-                                                      Padding(
-                                                          padding: getPadding(
-                                                              left: 72,
-                                                              top: 5,
-                                                              bottom: 5),
-                                                          child: Text(
-                                                              "Lead Wallet",
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style: AppStyle
-                                                                  .txtRobotoRomanBold12)),
-                                                      CustomButton(
-                                                          height:
-                                                              getVerticalSize(
-                                                                  26),
-                                                          width:
-                                                              getHorizontalSize(
-                                                                  70),
-                                                          text: getProfileModel
-                                                              .data!.lead
-                                                              .toString(),
-                                                          margin: getMargin(
-                                                              left: 8),
-                                                          variant: ButtonVariant
-                                                              .FillTeal800,
-                                                          shape: ButtonShape
-                                                              .CircleBorder13,
-                                                          fontStyle: ButtonFontStyle
-                                                              .RobotoRomanBold12)
-                                                    ]))),
-                                        Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Padding(
-                                                padding: getPadding(
-                                                    left: 95, top: 41),
-                                                child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                          getProfileModel.data!
-                                                                  .address ??
-                                                              "",
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          style: AppStyle
-                                                              .txtRalewayRomanBold11
-                                                              .copyWith(
-                                                                  letterSpacing:
-                                                                      getHorizontalSize(
-                                                                          0.33))),
-                                                      Padding(
-                                                          padding: getPadding(
-                                                              top: 3),
-                                                          child: Row(children: [
-                                                            CustomImageView(
-                                                                svgPath:
-                                                                    ImageConstant
-                                                                        .imgIcsharpstarpurple500,
-                                                                height:
-                                                                    getVerticalSize(
-                                                                        16),
-                                                                width:
-                                                                    getHorizontalSize(
-                                                                        15)),
-                                                            Padding(
-                                                                padding:
-                                                                    getPadding(
-                                                                        left:
-                                                                            1),
-                                                                child: Text(
-                                                                    "4.5",
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .left,
-                                                                    style: AppStyle
-                                                                        .txtInterBold12))
-                                                          ]))
-                                                    ]))),
-                                        Align(
-                                            alignment: Alignment.bottomLeft,
-                                            child: Container(
-                                                margin: getMargin(bottom: 15),
-                                                padding: getPadding(
-                                                    left: 17,
-                                                    top: 3,
-                                                    right: 17,
-                                                    bottom: 3),
-                                                decoration: AppDecoration
-                                                    .fillGreenA200
-                                                    .copyWith(
-                                                        borderRadius:
-                                                            BorderRadiusStyle
-                                                                .circleBorder22),
-                                                child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Container(
-                                                          width:
-                                                              getHorizontalSize(
-                                                                  89),
-                                                          margin:
-                                                              getMargin(top: 2),
-                                                          child: Text(
-                                                              "Total Earned:\nRs.10,000",
-                                                              maxLines: null,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: AppStyle
-                                                                  .txtInterBold13
-                                                                  .copyWith(
-                                                                      letterSpacing:
-                                                                          getHorizontalSize(
-                                                                              0.39))))
-                                                    ])))
-                                      ])),
-                              Padding(
-                                  padding:
-                                      getPadding(left: 16, top: 9, right: 17),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                            padding: getPadding(top: 3),
-                                            child: Text("5 New Jobs",
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.left,
-                                                style:
-                                                    AppStyle.txtInterBold16)),
-                                        Container(
-                                            height: getVerticalSize(23),
-                                            width: getHorizontalSize(92),
-                                            child: Stack(
-                                                alignment: Alignment.topRight,
+                                                      Icon(
+                                                        Icons
+                                                            .location_on_rounded,
+                                                        color: Colors
+                                                            .green.shade900,
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text(order
+                                                              .address!.street2
+                                                              .toString()),
+                                                          Text(order
+                                                              .address!.city
+                                                              .toString()),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              Text(
+                                                order.servicePrice.toString(),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily: "Inter"),
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  Align(
-                                                      alignment:
-                                                          Alignment.bottomLeft,
-                                                      child: GestureDetector(
-                                                          onTap: () {
-                                                            onTapTxtMissedjob(
-                                                                context);
-                                                          },
-                                                          child: Text(
-                                                              "Missed Job",
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style: AppStyle
-                                                                  .txtInterMedium16Blue900
-                                                                  .copyWith(
-                                                                      decoration:
-                                                                          TextDecoration
-                                                                              .underline)))),
-                                                  Align(
-                                                      alignment:
-                                                          Alignment.topRight,
-                                                      child: Container(
-                                                          height: getSize(8),
-                                                          width: getSize(8),
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  ColorConstant
-                                                                      .red600,
-                                                              borderRadius:
-                                                                  BorderRadius.circular(
-                                                                      getHorizontalSize(
-                                                                          4)))))
-                                                ]))
-                                      ])),
-                              Padding(
-                                  padding:
-                                      getPadding(left: 17, top: 17, right: 22),
-                                  child: ListView.separated(
-                                      physics: NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      separatorBuilder: (context, index) {
-                                        return SizedBox(
-                                            height: getVerticalSize(14));
-                                      },
-                                      itemCount: 2,
-                                      itemBuilder: (context, index) {
-                                        return ListserviceItemWidget(
-                                            onTapReject: () {
-                                          onTapReject(context);
-                                        }, onTapAccept: () {
-                                          onTapAccept(context);
-                                        });
-                                      })),
-                            ]),
-                      ),
-                    ),
+                                                  ElevatedButton(
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                              MaterialStatePropertyAll(
+                                                                  Colors
+                                                                      .redAccent)),
+                                                      onPressed: () {},
+                                                      child: Text(
+                                                        "         Reject        ",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontFamily: "Inter",
+                                                            color:
+                                                                Colors.white),
+                                                      )),
+                                                  Container(
+                                                    height: 35,
+                                                    width: 130,
+                                                    decoration: BoxDecoration(
+                                                        gradient:
+                                                            LinearGradient(
+                                                          colors: [
+                                                            Color(0xFF094DB3),
+                                                            // Blue color at 100%
+                                                            Color(0xFF09B3B3),
+                                                            // Teal color at 47%
+                                                          ],
+                                                          stops: [-2.0, 0.5],
+                                                          begin:
+                                                              FractionalOffset
+                                                                  .topCenter,
+                                                          end: FractionalOffset
+                                                              .bottomCenter,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5)),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Accept",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        // Change text color to make it visible on the gradient background
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily: "Inter",
+                                                      ),
+                                                    )),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        )));
+                              }),
+                    ],
                   ),
-                  BottomNavigationBar(
-                    backgroundColor: Colors.white,
-                      type: BottomNavigationBarType.fixed,
-                     selectedItemColor: Colors.blue.shade900,
-                      selectedLabelStyle: TextStyle(
-                        fontFamily: 'inter',
-                      ),
-                      currentIndex: _currentIndex,
-                      onTap: _onTabTapped,
-                      items: [
-                        BottomNavigationBarItem(
-                          activeIcon: CircleAvatar(
-                            backgroundColor: Colors.blue.shade900,
-                           child: CustomImageView(
-                                svgPath: ImageConstant.imgFrame),
-                          ),
-                          icon: CircleAvatar(
-                            backgroundColor: Colors.grey.shade600,
-                            child: CustomImageView(
-                                svgPath: ImageConstant.imgFrame),
-                          ),
-                          label: 'New Job',
-                        ),
-                        BottomNavigationBarItem(
-                          activeIcon: CircleAvatar(
-                            backgroundColor: Colors.blue.shade900,
-                            child: CustomImageView(
-                                svgPath: ImageConstant.imgRefresh),
-                          ),
-                          icon: CircleAvatar(
-                            backgroundColor: Colors.grey.shade600,
-                            child: CustomImageView(
-                                svgPath: ImageConstant.imgRefresh),
-                          ),
-                          label: 'Ongoing',
-                        ),
-                        BottomNavigationBarItem(
-                            activeIcon: CircleAvatar(
-                              backgroundColor: Colors.blue.shade900,
-                              child: CustomImageView(
-                                  svgPath: ImageConstant.imgCheckmark),
-                            ),
-                            icon: CircleAvatar(
-                              backgroundColor: Colors.grey.shade600,
-                              child: CustomImageView(
-                                  svgPath: ImageConstant.imgCheckmark),
-                            ),
-                            label: 'RAC Around'),
-                        BottomNavigationBarItem(
-                            activeIcon: CircleAvatar(
-                              backgroundColor: Colors.blue.shade900,
-                              child: CustomImageView(
-                                  svgPath: ImageConstant.imgFrameWhiteA700),
-                            ),
-                            icon: CircleAvatar(
-                              backgroundColor: Colors.grey.shade600,
-                              child: CustomImageView(
-                                  svgPath: ImageConstant.imgFrameWhiteA700),
-                            ),
-                            label: 'Shopping'),
-                        BottomNavigationBarItem(
-                            activeIcon: CircleAvatar(
-                              backgroundColor: Colors.blue.shade900,
-                              child: CustomImageView(
-                                  svgPath: ImageConstant.imgFrameWhiteA70040x40),
-                            ),
-                            icon: CircleAvatar(
-                              backgroundColor: Colors.grey.shade600,
-                              child: CustomImageView(
-                                  svgPath:
-                                      ImageConstant.imgFrameWhiteA70040x40),
-                            ),
-                            label: 'Profile')
-                      ]),
-                ]),
+                ),
         ),
+        bottomNavigationBar: BottomNavigationBar(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Colors.blue.shade900,
+            selectedLabelStyle: TextStyle(
+              fontFamily: 'inter',
+            ),
+            currentIndex: _currentIndex,
+            onTap: _onTabTapped,
+            items: [
+              BottomNavigationBarItem(
+                activeIcon: CircleAvatar(
+                  backgroundColor: Colors.blue.shade900,
+                  child: CustomImageView(svgPath: ImageConstant.imgFrame),
+                ),
+                icon: CircleAvatar(
+                  backgroundColor: Colors.grey.shade600,
+                  child: CustomImageView(svgPath: ImageConstant.imgFrame),
+                ),
+                label: 'New Job',
+              ),
+              BottomNavigationBarItem(
+                activeIcon: CircleAvatar(
+                  backgroundColor: Colors.blue.shade900,
+                  child: CustomImageView(svgPath: ImageConstant.imgRefresh),
+                ),
+                icon: CircleAvatar(
+                  backgroundColor: Colors.grey.shade600,
+                  child: CustomImageView(svgPath: ImageConstant.imgRefresh),
+                ),
+                label: 'Ongoing',
+              ),
+              BottomNavigationBarItem(
+                  activeIcon: CircleAvatar(
+                    backgroundColor: Colors.blue.shade900,
+                    child: CustomImageView(svgPath: ImageConstant.imgCheckmark),
+                  ),
+                  icon: CircleAvatar(
+                    backgroundColor: Colors.grey.shade600,
+                    child: CustomImageView(svgPath: ImageConstant.imgCheckmark),
+                  ),
+                  label: 'RAC Around'),
+              BottomNavigationBarItem(
+                  activeIcon: CircleAvatar(
+                    backgroundColor: Colors.blue.shade900,
+                    child: CustomImageView(
+                        svgPath: ImageConstant.imgFrameWhiteA700),
+                  ),
+                  icon: CircleAvatar(
+                    backgroundColor: Colors.grey.shade600,
+                    child: CustomImageView(
+                        svgPath: ImageConstant.imgFrameWhiteA700),
+                  ),
+                  label: 'Shopping'),
+              BottomNavigationBarItem(
+                  activeIcon: CircleAvatar(
+                    backgroundColor: Colors.blue.shade900,
+                    child: CustomImageView(
+                        svgPath: ImageConstant.imgFrameWhiteA70040x40),
+                  ),
+                  icon: CircleAvatar(
+                    backgroundColor: Colors.grey.shade600,
+                    child: CustomImageView(
+                        svgPath: ImageConstant.imgFrameWhiteA70040x40),
+                  ),
+                  label: 'Profile')
+            ]),
       ),
     );
   }
@@ -592,25 +566,50 @@ class _HomeScreenState extends State<HomeScreen> {
     final authRepository = AuthRepository();
     final response = await authRepository.getProfileApi();
     getProfileModel = GetProfileModel.fromJson(response);
+    Common.currentUser = getProfileModel!.data!;
+    print("response");
+    print(response);
+    print("response");
+    await Utils.saveToSharedPreference(
+        Constants.name, getProfileModel!.data!.fullName);
+    await Utils.saveToSharedPreference(
+        Constants.email, getProfileModel!.data!.email);
+    await Utils.saveToSharedPreference(
+        Constants.mobile, getProfileModel!.data!.phone);
+    await Utils.saveToSharedPreference(
+        Constants.profilePhoto, getProfileModel!.data!.phone);
     setState(() {});
   }
 
   void _onTabTapped(int index) {
-
     setState(() {
       _currentIndex = index;
       if (_currentIndex == 0) {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => HomeScreen()));
       } else if (_currentIndex == 1) {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>OngoingPressScreen()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => OngoingPressScreen()));
       } else if (_currentIndex == 2) {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>RacAroundScreen()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => RacAroundScreen()));
       } else if (_currentIndex == 3) {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>ShoppingPanelScreen()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => ShoppingPanelScreen()));
       } else if (_currentIndex == 4) {
-        Navigator.push(context, MaterialPageRoute(builder: (_)=>ProfileScreen()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => ProfileScreen()));
       }
     });
+  }
 
+  getNewOrder() async {
+    final authRepository = AuthRepository();
+    final response = await authRepository.getNewOrdersApi();
+    debugPrint(response.toString());
+
+    setState(() {
+      newOrderModel = NewOrderModel.fromJson(response);
+    });
   }
 }

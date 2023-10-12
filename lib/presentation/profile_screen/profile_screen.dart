@@ -1,16 +1,12 @@
+import 'package:urban_partner/common/common.dart';
 import 'package:urban_partner/core/utils/utils.dart';
+import 'package:urban_partner/presentation/create_support_screen/create_support_screen.dart';
 import 'package:urban_partner/presentation/edit_eorking_area_screen/edit_eorking_area_screen.dart';
 import 'package:urban_partner/presentation/my_plans_befor_activating_screen/my_plans_befor_activating_screen.dart';
-
-import '../profile_screen/widgets/listggprofile_item_widget.dart';
-import '../profile_screen/widgets/listuillanguage_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_circleimage.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
-import 'package:urban_partner/widgets/custom_icon_button.dart';
-
-import '../sign_up_page/sign_up.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -41,10 +37,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       CustomAppBar(
                           height: getVerticalSize(109),
                           title: Padding(
-                            padding: getPadding(left: 22),
+                            padding: getPadding(left: 10),
                             child: Row(children: [
-                              AppbarCircleimage(
-                                  imagePath: ImageConstant.imgEllipse405),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Container(
+                                  height: 80,
+                                  width: 80,
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    child: Image.network(
+                                      Common.currentUser!.uploadSelfie
+                                          .toString(),
+                                      height: 150,
+                                      width: 150,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
                               Padding(
                                 padding:
                                     getPadding(left: 15, top: 7, bottom: 23),
@@ -55,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         alignment: Alignment.centerLeft,
                                         child: Padding(
                                           padding: getPadding(right: 31),
-                                          child: Text("Raju Kumar",
+                                          child: Text(Common.currentUser!.fullName.toString(),
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.left,
                                               style: AppStyle
@@ -66,11 +77,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         alignment: Alignment.centerLeft,
                                         child: Padding(
                                           padding: getPadding(top: 10),
-                                          child: Text("+91 99999 99999",
-                                              overflow: TextOverflow.ellipsis,
-                                              textAlign: TextAlign.left,
-                                              style: AppStyle
-                                                  .txtPoppinsMedium16WhiteA70097),
+                                          child: Row(
+                                            children: [
+                                              Text("+91 ",overflow: TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: AppStyle
+                                                      .txtPoppinsMedium16WhiteA70097),
+                                              Text(Common.currentUser!.phone.toString(),
+                                                  overflow: TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.left,
+                                                  style: AppStyle
+                                                      .txtPoppinsMedium16WhiteA70097),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ]),
@@ -111,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: AppDecoration.fillGray800.copyWith(
                           borderRadius: BorderRadiusStyle.roundedBorder11),
                       child: ListView(
-                        physics: ClampingScrollPhysics(),
+                          physics: ClampingScrollPhysics(),
                           // mainAxisSize: MainAxisSize.min,
                           // crossAxisAlignment: CrossAxisAlignment.start,
                           // mainAxisAlignment: MainAxisAlignment.start,
@@ -278,7 +297,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Padding(
                                 padding: getPadding(left: 1, top: 11),
                                 child: GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     show();
                                   },
                                   child: Row(
@@ -286,8 +305,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         CustomImageView(
-                                            svgPath:
-                                                ImageConstant.imgEosiconscronjob,
+                                            svgPath: ImageConstant
+                                                .imgEosiconscronjob,
                                             height: getSize(32),
                                             width: getSize(32)),
                                         Padding(
@@ -307,9 +326,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     thickness: getVerticalSize(2),
                                     color: ColorConstant.blueGray100)),
                             GestureDetector(
-                                onTap: () {
-                                  onTapMyTeam(context);
-                                },
+                              onTap: () {
+                                onTapMyTeam(context);
+                              },
                               child: Padding(
                                   padding: getPadding(left: 1, top: 12),
                                   child: Row(
@@ -344,7 +363,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Padding(
                                 padding: getPadding(left: 1, top: 12),
                                 child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       CustomImageView(
                                           svgPath:
@@ -352,7 +372,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           height: getSize(32),
                                           width: getSize(32)),
                                       Padding(
-                                        padding: getPadding(left: 26, bottom: 7),
+                                        padding:
+                                            getPadding(left: 26, bottom: 7),
                                         child: Text("RAC Wallet",
                                             overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.left,
@@ -411,9 +432,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         CustomImageView(
-                                            onTap: (){
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(builder: (context)=>MyPlansBeforActivatingScreen()));
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          MyPlansBeforActivatingScreen()));
                                             },
                                             svgPath: ImageConstant
                                                 .imgIconparksolidplan,
@@ -423,12 +447,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             padding: getPadding(
                                                 left: 26, top: 2, bottom: 5),
                                             child: GestureDetector(
-                                              onTap: (){
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(builder: (context)=>MyPlansBeforActivatingScreen()));
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            MyPlansBeforActivatingScreen()));
                                               },
                                               child: Text("My Plan",
-                                                  overflow: TextOverflow.ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   textAlign: TextAlign.left,
                                                   style: AppStyle
                                                       .txtPoppinsMedium16WhiteA700),
@@ -493,9 +521,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 padding: getPadding(left: 1, top: 16),
                                 child: Row(children: [
                                   CustomImageView(
-                                      onTap: (){
-                                        Navigator.push(context,
-                                            MaterialPageRoute(builder: (context)=>EditEorkingAreaScreen()));
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditEorkingAreaScreen()));
                                       },
                                       svgPath: ImageConstant.imgMdiabout,
                                       height: getSize(32),
@@ -504,9 +535,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       padding: getPadding(
                                           left: 26, top: 6, bottom: 1),
                                       child: GestureDetector(
-                                        onTap: (){
-                                          Navigator.push(context,
-                                              MaterialPageRoute(builder: (context)=>EditEorkingAreaScreen()));
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditEorkingAreaScreen()));
                                         },
                                         child: Text("Edit Working Area",
                                             overflow: TextOverflow.ellipsis,
@@ -540,7 +574,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             left: 26, top: 0, bottom: 0),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text("Language",
                                                 overflow: TextOverflow.ellipsis,
@@ -594,7 +628,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CustomImageView(
-                                        svgPath: ImageConstant.imgMaterialsymbolsstarrate,
+                                        svgPath: ImageConstant
+                                            .imgMaterialsymbolsstarrate,
                                         height: getSize(32),
                                         width: getSize(32)),
                                     GestureDetector(
@@ -606,7 +641,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             left: 26, top: 0, bottom: 0),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text("Rate us",
                                                 overflow: TextOverflow.ellipsis,
@@ -618,7 +653,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.left,
                                               style:
-                                              AppStyle.txtPoppinsMedium13,
+                                                  AppStyle.txtPoppinsMedium13,
                                             ),
                                           ],
                                         ),
@@ -632,25 +667,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     height: getVerticalSize(2),
                                     thickness: getVerticalSize(2),
                                     color: ColorConstant.blueGray100,
-                                    indent: getHorizontalSize(1))),  Padding(
+                                    indent: getHorizontalSize(1))),
+                            Padding(
                               padding: getPadding(left: 1, top: 12),
                               child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CustomImageView(
-                                        svgPath: ImageConstant.imgMaterialsymbolWhiteA700,
+                                        svgPath: ImageConstant
+                                            .imgMaterialsymbolWhiteA700,
                                         height: getSize(32),
                                         width: getSize(32)),
                                     GestureDetector(
                                       onTap: () {
-                                        // onTapLangauge(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    CreateSupportScreen()));
                                       },
                                       child: Padding(
                                         padding: getPadding(
                                             left: 26, top: 0, bottom: 0),
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text("Support",
                                                 overflow: TextOverflow.ellipsis,
@@ -662,7 +703,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               overflow: TextOverflow.ellipsis,
                                               textAlign: TextAlign.left,
                                               style:
-                                              AppStyle.txtPoppinsMedium13,
+                                                  AppStyle.txtPoppinsMedium13,
                                             ),
                                           ],
                                         ),
@@ -710,21 +751,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     thickness: getVerticalSize(2),
                                     color: ColorConstant.blueGray100)),
                             Padding(
-                              padding:
-                                  getPadding(top: 14, right: 52,),
+                              padding: getPadding(
+                                top: 14,
+                                right: 52,
+                              ),
                               child: GestureDetector(
-                                onTap: (){
+                                onTap: () {
                                   Utils.logOut(context);
                                 },
                                 child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       CustomImageView(
                                           svgPath:
                                               ImageConstant.imgCodiconsignout,
                                           height: getSize(32),
                                           width: getSize(32),
-                                          margin: getMargin(top: 1, bottom: 10)),
+                                          margin:
+                                              getMargin(top: 1, bottom: 10)),
                                       Expanded(
                                         child: Padding(
                                           padding: getPadding(left: 26),
@@ -761,7 +806,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ]),
           ),
         ),
-
       ),
     );
   }
@@ -772,13 +816,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   onTapLangauge(BuildContext context) {
-    Navigator.pushNamed(
-        context, AppRoutes.languageScreen);
+    Navigator.pushNamed(context, AppRoutes.languageScreen);
   }
 
   onTapJobHistory(BuildContext context) {
-    Navigator.pushNamed(
-        context, AppRoutes. iphone14NineteenScreen);
+    Navigator.pushNamed(context, AppRoutes.iphone14NineteenScreen);
   }
 
   onTapTxtNameemailcontac(BuildContext context) {
@@ -828,7 +870,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.pushNamed(context, AppRoutes.racAroundScreen);
   }
 
- onTapRacwallet(BuildContext context) {
+  onTapRacwallet(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.racWalletScreen);
   }
 
@@ -861,21 +903,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog( // <-- SEE HERE
+        return AlertDialog(
+          // <-- SEE HERE
           content: Container(
-           height: 100,
+            height: 100,
             decoration: AppDecoration.fillOrangeA100.copyWith(
               borderRadius: BorderRadiusStyle.roundedBorder16,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Your Total Missed Job",),
+                Text(
+                  "Your Total Missed Job",
+                ),
                 Text("1519")
               ],
             ),
           ),
-
         );
       },
     );

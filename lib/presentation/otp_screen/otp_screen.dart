@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/models/otp_model.dart';
+import 'package:urban_partner/models/resend_otp_model.dart';
 import 'package:urban_partner/presentation/home_screen/home_screen.dart';
 import 'package:urban_partner/presentation/select_city_screen/select_city_screen.dart';
 import 'package:urban_partner/repository/auth_repository.dart';
@@ -18,7 +19,6 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   final pinCodeController = TextEditingController();
-
   String phone = '';
 
   String otpId = '';
@@ -144,16 +144,19 @@ class _OtpScreenState extends State<OtpScreen> {
                                         activeColor:
                                             ColorConstant.fromHex("#1212121D")))
                               ])),
-                   _isLoading?Center(child: CircularProgressIndicator()) :  CustomButton(
-                        text: "Verify",
-                        margin: getMargin(left: 27, top: 94, right: 28),
-                        shape: ButtonShape.RoundedBorder29,
-                        padding: ButtonPadding.PaddingAll15,
-                        fontStyle: ButtonFontStyle.MulishItalicExtraBlack24,
-                        onTap: () {
-                          onTapVerify(context);
-                        },
-                      ),
+                      _isLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : CustomButton(
+                              text: "Verify",
+                              margin: getMargin(left: 27, top: 94, right: 28),
+                              shape: ButtonShape.RoundedBorder29,
+                              padding: ButtonPadding.PaddingAll15,
+                              fontStyle:
+                                  ButtonFontStyle.MulishItalicExtraBlack24,
+                              onTap: () {
+                                onTapVerify(context);
+                              },
+                            ),
                       Padding(
                           padding: getPadding(top: 17),
                           child: Text("Trouble receiving code ?",
@@ -182,17 +185,22 @@ class _OtpScreenState extends State<OtpScreen> {
                                   )),
                               Padding(
                                 padding: getPadding(left: 15),
-                                child: Text(
-                                  "RESEND OTP",
-                                  overflow: TextOverflow.ellipsis,
-                                  textAlign: TextAlign.left,
-                                  style: AppStyle
-                                      .txtMulishItalicExtraBlack16Blue90075
-                                      .copyWith(
-                                    fontFamily: 'Mulish',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900,
-                                    fontStyle: FontStyle.italic,
+                                child: InkWell(
+                                  onTap: () {
+                                    tapOnResendOtp();
+                                  },
+                                  child: Text(
+                                    "RESEND OTP",
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                    style: AppStyle
+                                        .txtMulishItalicExtraBlack16Blue90075
+                                        .copyWith(
+                                      fontFamily: 'Mulish',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w900,
+                                      fontStyle: FontStyle.italic,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -222,7 +230,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
   void onTapVerify(BuildContext context) async {
     setState(() {
-      _isLoading= true;
+      _isLoading = true;
     });
     final authRepository = AuthRepository();
     final response = await authRepository
@@ -230,11 +238,12 @@ class _OtpScreenState extends State<OtpScreen> {
     OtpModel otpModel = OtpModel.fromJson(response);
     if (otpModel.status == 200) {
       setState(() {
-        _isLoading= false;
+        _isLoading = false;
       });
       await Utils.saveToSharedPreference(Constants.isLoggedIn, true);
       await Utils.saveToSharedPreference(Constants.userId, otpId);
-      await Utils.saveToSharedPreference(Constants.accessToken, otpModel.data?.accessToken);
+      await Utils.saveToSharedPreference(
+          Constants.accessToken, otpModel.data?.accessToken);
       debugPrint(otpModel.data!.otp.toString());
       debugPrint(otpModel.data?.accessToken);
       debugPrint(otpModel.data?.id);
@@ -243,14 +252,43 @@ class _OtpScreenState extends State<OtpScreen> {
         Utils.pushToNewRoute(context, HomeScreen());
       } else {
         setState(() {
-          _isLoading= false;
+          _isLoading = false;
         });
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => SelectCityScreen()));
       }
     } else {
       setState(() {
-        _isLoading= false;
+        _isLoading = false;
+      });
+      Utils.toastMassage(response['message']);
+    }
+  }
+
+  Future<void> tapOnResendOtp() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final authRepository = AuthRepository();
+    final response = await authRepository.resendOtp(otpId);
+    ResendOtpModel resendOtpModel = ResendOtpModel.fromJson(response);
+    if (resendOtpModel.status == 200) {
+      setState(() {
+        _isLoading = false;
+      });
+      Utils.toastMassage(resendOtpModel.data!.otp.toString());
+      if (_isFromLogin) {
+        Utils.pushToNewRoute(context, HomeScreen());
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => SelectCityScreen()));
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
       });
       Utils.toastMassage(response['message']);
     }
