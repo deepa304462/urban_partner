@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/models/on_going_service_model.dart';
 import 'package:urban_partner/presentation/home_screen/dashboard_view.dart';
+import 'package:urban_partner/presentation/home_screen/home_screen.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_iconbutton.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_subtitle_1.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
@@ -15,7 +16,7 @@ class OngoingPressScreen extends StatefulWidget {
 }
 
 class _OngoingPressScreenState extends State<OngoingPressScreen> {
-  OnGoingServiceModel onGoingServiceModel = OnGoingServiceModel();
+  OnGoingServiceModel? onGoingServiceModel;
   List<Data> onGoingJobList = [];
 
   @override
@@ -35,13 +36,12 @@ class _OngoingPressScreenState extends State<OngoingPressScreen> {
           leading: AppbarIconbutton(
             svgPath: ImageConstant.imgGroup295,
             onTap: () {
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (context) => Dashboard()));
+               Navigator.push(context,MaterialPageRoute(builder: (_)=> Dashboard()));
             },
           ),
           title: Center(child: AppbarSubtitle1(text: "Ongoing Jobs")),
         ),
-        body:ListView.builder(
+        body:onGoingServiceModel == null ?Center(child: CircularProgressIndicator(),):ListView.builder(
             itemCount: onGoingJobList.length,
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
@@ -240,10 +240,9 @@ class _OngoingPressScreenState extends State<OngoingPressScreen> {
     final authRepository = AuthRepository();
     final response = await authRepository.onGoingService();
     debugPrint(response.toString());
-    OnGoingServiceModel onGoingServiceModel =
-        OnGoingServiceModel.fromJson(response);
+     onGoingServiceModel = OnGoingServiceModel.fromJson(response);
     setState(() {
-      onGoingJobList = onGoingServiceModel.data!;
+      onGoingJobList = onGoingServiceModel!.data!;
       print(onGoingJobList.length);
     });
   }

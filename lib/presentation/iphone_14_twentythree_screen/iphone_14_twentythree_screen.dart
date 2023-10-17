@@ -1,3 +1,4 @@
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:urban_partner/presentation/profile_screen/profile_screen.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_iconbutton.dart';
 
@@ -9,7 +10,27 @@ import 'package:urban_partner/widgets/app_bar/appbar_subtitle_1.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 
-class Iphone14TwentythreeScreen extends StatelessWidget {
+class Iphone14TwentythreeScreen extends StatefulWidget {
+  @override
+  State<Iphone14TwentythreeScreen> createState() => _Iphone14TwentythreeScreenState();
+}
+
+class _Iphone14TwentythreeScreenState extends State<Iphone14TwentythreeScreen> {
+  var _razorpay = Razorpay();
+  @override
+  void initState() {
+    super.initState();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    _razorpay.clear(); //
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -101,7 +122,7 @@ class Iphone14TwentythreeScreen extends StatelessWidget {
                             color: Colors.green,
                             fontWeight: FontWeight.bold
                           ),)
-                          
+
                         ],
                       ),
                     ),
@@ -189,100 +210,143 @@ class Iphone14TwentythreeScreen extends StatelessWidget {
           padding: ButtonPadding.PaddingAll11,
           fontStyle: ButtonFontStyle.InterSemiBold14,
           onTap: () {
-            bottomSheet(context);
+            _showRacBottomSheet(context,"Add Leads","Submit","Please enter a lead you want to \nadd...","Leeds");
           },
         ),
       ),
     );
   }
 
-  onTapAddlead(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.frame37396Screen);
+  void _showRacBottomSheet(BuildContext context,String title, String buttonText, String description,String lableText) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: 250,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                color: Colors.white),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20,left: 12,right: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(fontFamily: "Inter", fontSize: 16,fontWeight: FontWeight.bold),
+                      ),
+                      Image.asset('assets/images/img_pngcliparthum.png',height: 50,width: 50,)
+                    ],
+                  ),
+                  Text(description,
+                      style: TextStyle(fontFamily: "Inter", fontSize: 16)),
+                  Center(
+                    child: SizedBox(
+                      width: 120,
+                      child:
+                      TextField(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.currency_rupee,color: Colors.green.shade900,),
+                          labelText: lableText,
+                          labelStyle: TextStyle(
+                              fontFamily: "Inter", fontSize: 16,color: Colors.green.shade900,fontWeight: FontWeight.bold),
+                        ),
+
+                      ),
+
+
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: (){
+                      var options = {
+                        'key': 'rzp_test_35fzmQiPzfuB15',
+                        'amount': 1*100,
+                        'name': 'Urban Clap',
+                        'description': 'Service',
+                        'timeout':60,
+                      };
+                      _razorpay.open(options);
+                    },
+                    child: Center(
+                      child: Container(
+                        height: 35,
+                        width: 130,
+                        decoration: BoxDecoration(
+                            gradient:
+                            LinearGradient(
+                              colors: [
+                                Color(0xFF094DB3),
+                                // Blue color at 100%
+                                Color(0xFF09B3B3),
+                                // Teal color at 47%
+                              ],
+                              stops: [-2.0, 0.5],
+                              begin:
+                              FractionalOffset
+                                  .topCenter,
+                              end: FractionalOffset
+                                  .bottomCenter,
+                            ),
+                            borderRadius:
+                            BorderRadius
+                                .circular(5)),
+                        child: Center(
+                            child: Text(
+                              buttonText,
+                              style: TextStyle(
+                                color: Colors.white,
+                                // Change text color to make it visible on the gradient background
+                                fontWeight:
+                                FontWeight.bold,
+                                fontFamily: "Inter",
+                              ),
+                            )),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),);
+      },
+    );
   }
 }
 
-void bottomSheet(context) {
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: Colors.transparent,
-    builder: (context) => Container(
-      height: 250,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
-          )),
-      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Container(
-          width: double.maxFinite,
-          padding: getPadding(top: 20, bottom: 20),
-          decoration: AppDecoration.fillWhiteA700
-              .copyWith(borderRadius: BorderRadiusStyle.customBorderTL36),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      // Text("Add Credit",
-                      //     overflow: TextOverflow.ellipsis,
-                      //     textAlign: TextAlign.left,
-                      //     style: AppStyle.txtPoppinsMedium18),
-                      Container(
-                          width: getHorizontalSize(275),
-                          margin: getMargin(top: 1),
-                          child: Text("Add Leads",
-                              maxLines: null,
-                              textAlign: TextAlign.left,
-                              style: AppStyle.txtPoppinsMedium18)),
-                      Container(
-                          width: getHorizontalSize(275),
-                          margin: getMargin(top: 4),
-                          child: Text("Please enter the leads you want to add.",
-                              maxLines: null,
-                              textAlign: TextAlign.left,
-                              style: AppStyle.txtPoppinsRegular16Black900)),
-                      Padding(
-                          padding: getPadding(top: 18, right: 95),
-                          child: Text("10",
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.left,
-                              style: AppStyle.txtPoppinsBold16Lightgreen900)),
-                      Padding(
-                          padding: getPadding(top: 1),
-                          child: SizedBox(
-                              width: getHorizontalSize(138),
-                              child: Divider(
-                                  height: getVerticalSize(2),
-                                  thickness: getVerticalSize(2),
-                                  color: ColorConstant.blueGray100,
-                                  endIndent: getHorizontalSize(75)))),
-                      CustomButton(
-                          width: getHorizontalSize(201),
-                          text: "Submit",
-                          margin: getMargin(top: 48, right: 9),
-                          shape: ButtonShape.RoundedBorder9,
-                          padding: ButtonPadding.PaddingAll11,
-                          fontStyle: ButtonFontStyle.InterSemiBold14,
-                          onTap: () {
-                            onTapPaymentone(context);
-                          })
-                    ]),
-                CustomImageView(
-                    imagePath: ImageConstant.imgPngcliparthum,
-                    height: getSize(48),
-                    width: getSize(48),
-                    radius: BorderRadius.circular(getHorizontalSize(24)),
-                    margin: getMargin(top: 1, bottom: 160))
-              ]),
-        ),
-      ]),
-    ),
-  );
+
+
+
+
+void _handlePaymentSuccess(PaymentSuccessResponse response) {
+  // Do something when payment succeeds
 }
+
+void _handlePaymentError(PaymentFailureResponse response) {
+  // Do something when payment fails
+}
+
+void _handleExternalWallet(ExternalWalletResponse response) {
+  // Do something when an external wallet was selected
+}
+
+
+
+
 
 class Transaction {
   final String transactionType;

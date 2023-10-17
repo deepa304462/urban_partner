@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:outline_gradient_button/outline_gradient_button.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/presentation/profile_screen/profile_screen.dart';
 import 'package:urban_partner/widgets/app_bar/appbar_iconbutton.dart';
@@ -7,7 +8,21 @@ import 'package:urban_partner/widgets/app_bar/appbar_subtitle_1.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 
-class AfterActivatingScreen extends StatelessWidget {
+class AfterActivatingScreen extends StatefulWidget {
+  @override
+  State<AfterActivatingScreen> createState() => _AfterActivatingScreenState();
+}
+
+class _AfterActivatingScreenState extends State<AfterActivatingScreen> {
+  var _razorpay = Razorpay();
+
+  @override
+  void initState() {
+    super.initState();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -263,7 +278,7 @@ class AfterActivatingScreen extends StatelessWidget {
                                                 fontStyle: ButtonFontStyle
                                                     .PoppinsMedium16,
                                                 onTap: () {
-                                                  onTapAddlead(context);
+                                                  _showRacBottomSheet(context,"Add Leads","Submit","Please enter a lead you want to \nadd...","Leeds");
                                                 })),
                                         Padding(
                                             padding: getPadding(left: 24),
@@ -306,7 +321,7 @@ class AfterActivatingScreen extends StatelessWidget {
                                                     fontStyle: ButtonFontStyle
                                                         .PoppinsMedium16,
                                                     onTap: () {
-                                                      onTapAddwallet(context);
+                                                      _showRacBottomSheet(context,"Add Amount","Submit","Please enter a amount you want to \nadd...","Amount");
                                                     })))
                                       ])),
                               CustomButton(
@@ -323,15 +338,138 @@ class AfterActivatingScreen extends StatelessWidget {
                             ]))))));
   }
 
-  onTapAddlead(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.iphone14TwentythreeScreen);
-  }
-
-  onTapAddwallet(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.racWalletScreen);
-  }
 
   onTapChangeplan(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.myPlansAfterActivatingScreen);
+  }
+
+  void _showRacBottomSheet(BuildContext context,String title, String buttonText, String description,String lableText) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: 250,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                color: Colors.white),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20,left: 12,right: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(fontFamily: "Inter", fontSize: 16,fontWeight: FontWeight.bold),
+                      ),
+                      Image.asset('assets/images/img_pngcliparthum.png',height: 50,width: 50,)
+                    ],
+                  ),
+                  Text(description,
+                      style: TextStyle(fontFamily: "Inter", fontSize: 16)),
+                  Center(
+                    child: SizedBox(
+                      width: 120,
+                      child:
+                      TextField(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.currency_rupee,color: Colors.green.shade900,),
+                          labelText: lableText,
+                          labelStyle: TextStyle(
+                              fontFamily: "Inter", fontSize: 16,color: Colors.green.shade900,fontWeight: FontWeight.bold),
+                        ),
+
+                      ),
+
+
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: (){
+                      var options = {
+                        'key': 'rzp_test_35fzmQiPzfuB15',
+                        'amount': 1*100,
+                        'name': 'Urban Clap',
+                        'description': 'Service',
+                        'timeout':60,
+                      };
+                      _razorpay.open(options);
+                    },
+                    child: Center(
+                      child: Container(
+                        height: 35,
+                        width: 130,
+                        decoration: BoxDecoration(
+                            gradient:
+                            LinearGradient(
+                              colors: [
+                                Color(0xFF094DB3),
+                                // Blue color at 100%
+                                Color(0xFF09B3B3),
+                                // Teal color at 47%
+                              ],
+                              stops: [-2.0, 0.5],
+                              begin:
+                              FractionalOffset
+                                  .topCenter,
+                              end: FractionalOffset
+                                  .bottomCenter,
+                            ),
+                            borderRadius:
+                            BorderRadius
+                                .circular(5)),
+                        child: Center(
+                            child: Text(
+                              buttonText,
+                              style: TextStyle(
+                                color: Colors.white,
+                                // Change text color to make it visible on the gradient background
+                                fontWeight:
+                                FontWeight.bold,
+                                fontFamily: "Inter",
+                              ),
+                            )),
+                      ),
+                    ),
+                  ),
+
+
+                ],
+              ),
+            ),
+          ),);
+      },
+    );
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    // Do something when payment succeeds
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // Do something when payment fails
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // Do something when an external wallet was selected
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    _razorpay.clear(); //
   }
 }

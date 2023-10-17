@@ -1,3 +1,5 @@
+import 'package:razorpay_flutter/razorpay_flutter.dart';
+
 import '../rac_wallet_screen/widgets/rac_wallet_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:urban_partner/core/app_export.dart';
@@ -6,7 +8,21 @@ import 'package:urban_partner/widgets/app_bar/appbar_subtitle_1.dart';
 import 'package:urban_partner/widgets/app_bar/custom_app_bar.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 
-class RacWalletScreen extends StatelessWidget {
+class RacWalletScreen extends StatefulWidget {
+  @override
+  State<RacWalletScreen> createState() => _RacWalletScreenState();
+}
+
+class _RacWalletScreenState extends State<RacWalletScreen> {
+  var _razorpay = Razorpay();
+
+  @override
+  void initState() {
+    super.initState();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -169,7 +185,7 @@ class RacWalletScreen extends StatelessWidget {
           padding: ButtonPadding.PaddingAll11,
           fontStyle: ButtonFontStyle.InterSemiBold14,
           onTap: () {
-            bottomSheet(context);
+            _showRacBottomSheet(context,"Add Amount","Add Money","Please enter a amount you want to \nadd...","Amount");
           },
         ),
       ),
@@ -177,109 +193,143 @@ class RacWalletScreen extends StatelessWidget {
   }
 
   //
-  onTapAddmoney(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.frame37395Screen);
-  }
-
   onTapProfile(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.profileScreen);
   }
+  void _showRacBottomSheet(BuildContext context,String title, String buttonText, String description,String lableText) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: 250,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                color: Colors.white),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20,left: 12,right: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(fontFamily: "Inter", fontSize: 16,fontWeight: FontWeight.bold),
+                      ),
+                      Image.asset('assets/images/img_pngcliparthum.png',height: 50,width: 50,)
+                    ],
+                  ),
+                  Text(description,
+                      style: TextStyle(fontFamily: "Inter", fontSize: 16)),
+                  Center(
+                    child: SizedBox(
+                      width: 120,
+                      child:
+                      TextField(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.currency_rupee,color: Colors.green.shade900,),
+                          labelText: lableText,
+                          labelStyle: TextStyle(
+                              fontFamily: "Inter", fontSize: 16,color: Colors.green.shade900,fontWeight: FontWeight.bold),
+                        ),
+
+                      ),
+
+
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: (){
+                      var options = {
+                        'key': 'rzp_test_35fzmQiPzfuB15',
+                        'amount': 1*100,
+                        'name': 'Urban Clap',
+                        'description': 'Service',
+                        'timeout':60,
+                      };
+                      _razorpay.open(options);
+                    },
+                    child: Center(
+                      child: Container(
+                        height: 35,
+                        width: 130,
+                        decoration: BoxDecoration(
+                            gradient:
+                            LinearGradient(
+                              colors: [
+                                Color(0xFF094DB3),
+                                // Blue color at 100%
+                                Color(0xFF09B3B3),
+                                // Teal color at 47%
+                              ],
+                              stops: [-2.0, 0.5],
+                              begin:
+                              FractionalOffset
+                                  .topCenter,
+                              end: FractionalOffset
+                                  .bottomCenter,
+                            ),
+                            borderRadius:
+                            BorderRadius
+                                .circular(5)),
+                        child: Center(
+                            child: Text(
+                              buttonText,
+                              style: TextStyle(
+                                color: Colors.white,
+                                // Change text color to make it visible on the gradient background
+                                fontWeight:
+                                FontWeight.bold,
+                                fontFamily: "Inter",
+                              ),
+                            )),
+                      ),
+                    ),
+                  ),
+
+
+                ],
+              ),
+            ),
+          ),);
+      },
+    );
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    // Do something when payment succeeds
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    // Do something when payment fails
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // Do something when an external wallet was selected
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    _razorpay.clear(); //
+  }
 }
 
-void bottomSheet(context) {
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: Colors.transparent,
-    builder: (context) => Container(
-      height: 250,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
-          )),
-      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Container(
-          width: double.maxFinite,
-          padding: getPadding(top: 20, bottom: 20),
-          decoration: AppDecoration.fillWhiteA700
-              .copyWith(borderRadius: BorderRadiusStyle.customBorderTL36),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      // Text("Add Credit",
-                      //     overflow: TextOverflow.ellipsis,
-                      //     textAlign: TextAlign.left,
-                      //     style: AppStyle.txtPoppinsMedium18),
-                      Container(
-                          width: getHorizontalSize(275),
-                          margin: getMargin(top: 1),
-                          child: Text("Add Credit",
-                              maxLines: null,
-                              textAlign: TextAlign.left,
-                              style: AppStyle.txtPoppinsMedium18)),
-                      Container(
-                          width: getHorizontalSize(275),
-                          margin: getMargin(top: 4),
-                          child: Text(
-                              "Please enter the amount you want to add.",
-                              maxLines: null,
-                              textAlign: TextAlign.left,
-                              style: AppStyle.txtPoppinsRegular16Black900)),
-                      Padding(
-                          padding: getPadding(top: 18, right: 76),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CustomImageView(
-                                    svgPath: ImageConstant
-                                        .imgMaterialsymbolLightGreen900,
-                                    height: getSize(24),
-                                    width: getSize(24)),
-                                Text("5000",
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.left,
-                                    style:
-                                        AppStyle.txtPoppinsBold16Lightgreen900)
-                              ])),
-                      Padding(
-                          padding: getPadding(top: 1),
-                          child: SizedBox(
-                              width: getHorizontalSize(138),
-                              child: Divider(
-                                  height: getVerticalSize(2),
-                                  thickness: getVerticalSize(2),
-                                  color: ColorConstant.blueGray100,
-                                  endIndent: getHorizontalSize(75)))),
-                      CustomButton(
-                        width: getHorizontalSize(201),
-                        text: "Add Money",
-                        margin: getMargin(top: 48, right: 9),
-                        shape: ButtonShape.RoundedBorder9,
-                        padding: ButtonPadding.PaddingAll11,
-                        fontStyle: ButtonFontStyle.InterSemiBold14,
-                        onTap: () {
-                          onTapAddmoney(context);
-                        },
-                      )
-                    ]),
-                CustomImageView(
-                    imagePath: ImageConstant.imgPngcliparthum,
-                    height: getSize(48),
-                    width: getSize(48),
-                    radius: BorderRadius.circular(getHorizontalSize(24)),
-                    margin: getMargin(top: 1, bottom: 160))
-              ]),
-        ),
-      ]),
-    ),
-  );
-}
+
+
+
 
 onTapAddmoney(BuildContext context) {
   Navigator.pushNamed(context, AppRoutes.addMoneyScreen);

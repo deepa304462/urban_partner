@@ -31,7 +31,7 @@ class _RacAroundScreenState extends State<RacAroundScreen> {
           leadingWidth: 58,
           leading: AppbarIconbutton(
             onTap: (){
-             // Navigator.push(context, MaterialPageRoute(builder: (context)=>Dashboard()));
+              Navigator.push(context,MaterialPageRoute(builder: (_)=> Dashboard()));
             },
             svgPath: ImageConstant.imgGroup295,
           ),

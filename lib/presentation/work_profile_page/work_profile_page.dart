@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:urban_partner/core/app_export.dart';
 import 'package:urban_partner/models/update_and_upload_model.dart';
+import 'package:urban_partner/presentation/home_screen/dashboard_view.dart';
 import 'package:urban_partner/presentation/home_screen/home_screen.dart';
 import 'package:urban_partner/widgets/custom_button.dart';
 import 'package:urban_partner/widgets/custom_text_form_field.dart';
@@ -47,6 +48,8 @@ class _WorkProfilePageState extends State<WorkProfilePage>
   File? adharBack;
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  UpdateAndUploadModel? updateAndUploadModel;
+
 
   @override
   bool get wantKeepAlive => true;
@@ -601,31 +604,6 @@ class _WorkProfilePageState extends State<WorkProfilePage>
     );
   }
 
-  // onTapSave(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.homeOneScreen);
-  // }
-  //
-  // onTapAster(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.asterImagePage);
-  // }
-
-  //
-  // onTapImgMaterialsymbols1(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
-  // }
-  //
-  // onTapImgMaterialsymbols2(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
-  // }
-  //
-  // onTapImgMaterialsymbols3(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.frame7913Screen);
-  // }
-  //
-  // onTapGridicons(BuildContext context) {
-  //   Navigator.pushNamed(context, AppRoutes.frame37355Screen);
-  // }
-
   void uploadAndUpdateDocument() async {
     setState(() {
       _isLoading = true;
@@ -645,12 +623,11 @@ class _WorkProfilePageState extends State<WorkProfilePage>
     setState(() {
       _isLoading = false;
     });
-    UpdateAndUploadModel updateAndUploadModel =
-    UpdateAndUploadModel.fromJson(response);
+    updateAndUploadModel = UpdateAndUploadModel.fromJson(response);
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => HomeScreen(),
+          builder: (context) => Dashboard(),
         ));
 
     debugPrint(response.toString());
